@@ -11,6 +11,9 @@ Welcome to Vertx Wizarding School, a Harry Potter-themed microservice architectu
 
     - Publishes and manages public endpoints that serve as the entry points for client and server interactions.
     - Defines API routes and endpoints that allow external entities, including the client-rendering-server, to communicate with the various microservices.
+ 
+- **Gateway:**
+    - Acts as a gateway by providing a unified entry point for client and server interactions. It plays a key role in shaping and managing public endpoints, defining API routes, and ensuring secure communication. 
     
 - **Security and Access Control Service:**
 
