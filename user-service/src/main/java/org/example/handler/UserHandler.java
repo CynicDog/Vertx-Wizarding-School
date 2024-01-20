@@ -52,8 +52,10 @@ public class UserHandler {
                     .subscribe(
                             user -> {
                                 if (user.isEmpty()) {
+                                    // unique
                                     ctx.response().setStatusCode(200).end();
                                 } else {
+                                    // duplicate
                                     ctx.response().setStatusCode(409).end();
                                 }
                             },
@@ -79,8 +81,10 @@ public class UserHandler {
                     .subscribe(
                             user -> {
                                 if (user.isEmpty()) {
+                                    // unique
                                     ctx.response().setStatusCode(200).end();
                                 } else {
+                                    // duplicate
                                     ctx.response().setStatusCode(409).end();
                                 }
                             },

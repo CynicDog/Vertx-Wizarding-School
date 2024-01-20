@@ -41,7 +41,7 @@ public class RegisterHandler {
                 ).ignoreElement()
                 .subscribe(
                         () -> {
-                            logger.info(ctx.response().getStatusMessage());
+                            logger.info("Registered successfully.");
                             ctx.response().end();
                         },
                         err -> {

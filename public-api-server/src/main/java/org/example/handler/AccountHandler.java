@@ -98,7 +98,7 @@ public class AccountHandler {
                 })
                 .subscribe(
                         token -> {
-                            logger.info(ctx.response().getStatusMessage());
+                            logger.info("Token issued with the value of {}", token);
                             ctx.response().putHeader("Content-Type", "application/jwt").end(token);
                         },
                         err -> {
