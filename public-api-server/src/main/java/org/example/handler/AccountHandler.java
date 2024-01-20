@@ -14,6 +14,46 @@ public class AccountHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountHandler.class);
 
+    public static void checkUsername(RoutingContext ctx, WebClient webClient) {
+
+        String username = ctx.request().getParam("username");
+        logger.info("Duplication validation on username of {}", username);
+
+        webClient.get(3000, "localhost", "/is-unique?username=" + username)
+                .expect(ResponsePredicate.SC_OK)
+                .rxSend()
+                .subscribe(
+                        ok -> {
+                            logger.info(ok.statusMessage());
+                            ctx.response().setStatusCode(ok.statusCode()).end();
+                        },
+                        err -> {
+                            logger.error(err.getMessage());
+                            ctx.fail(err);
+                        }
+                );
+    }
+
+    public static void checkEmailAddress(RoutingContext ctx, WebClient webClient) {
+
+        String emailAddress = ctx.request().getParam("email-address");
+        logger.info("Duplication validation on email address of {}", emailAddress);
+
+        webClient.get(3000, "localhost", "/is-unique?email-address=" + emailAddress)
+                .expect(ResponsePredicate.SC_OK)
+                .rxSend()
+                .subscribe(
+                        ok -> {
+                            logger.info(ok.statusMessage());
+                            ctx.response().setStatusCode(ok.statusCode()).end();
+                        },
+                        err -> {
+                            logger.error(err.getMessage());
+                            ctx.fail(err);
+                        }
+                );
+    }
+
     public static void register(RoutingContext ctx, WebClient webClient) {
         webClient
                 .post(3000, "localhost", "/register")
@@ -63,8 +103,7 @@ public class AccountHandler {
                         },
                         err -> {
                             logger.error(err.getMessage());
-                            ctx.fail(ctx.statusCode());
+                            ctx.fail(err);
                         });
-
     }
 }

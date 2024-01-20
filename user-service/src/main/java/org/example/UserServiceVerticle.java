@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import static org.example.config.MongoConfig.mongoConfig;
 import static org.example.handler.RegisterHandler.authenticate;
 import static org.example.handler.RegisterHandler.register;
-import static org.example.handler.UserHandler.fetchUser;
+import static org.example.handler.UserHandler.*;
 
 public class UserServiceVerticle extends AbstractVerticle {
 
@@ -42,7 +42,15 @@ public class UserServiceVerticle extends AbstractVerticle {
         router.post("/register").handler(ctx -> register(ctx, mongoClient, mongoUserUtil));
         router.post("/authenticate").handler(ctx -> authenticate(ctx, mongoAuthProvider));
 
-        router.get("/:username").handler(ctx -> fetchUser(ctx, mongoClient));
+        router.get("/fetch-user").handler(ctx -> fetchUser(ctx, mongoClient));
+        router.get("/is-unique").handler(ctx -> {
+            // duplicate validation either on username or email address
+            if (ctx.request().getParam("username") != null) {
+                isUniqueUsername(ctx, mongoClient);
+            } else {
+                isUniqueEmailAddress(ctx, mongoClient);
+            }
+        });
 
         return vertx.createHttpServer()
                 .requestHandler(router)

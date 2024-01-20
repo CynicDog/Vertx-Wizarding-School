@@ -11,7 +11,7 @@ public class UserHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
 
     public static void fetchUser(RoutingContext ctx, WebClient webClient) {
-        webClient.get(3000, "localhost", "/" + ctx.pathParam("username"))
+        webClient.get(3000, "localhost", "/fetch-user?username=" + ctx.request().getParam("username"))
                 .as(BodyCodec.jsonObject())
                 .rxSend()
                 .subscribe(
@@ -21,7 +21,7 @@ public class UserHandler {
                         },
                         err -> {
                             logger.error(err.getMessage());
-                            ctx.fail(ctx.statusCode());
+                            ctx.fail(err);
                         }
                 );
     }

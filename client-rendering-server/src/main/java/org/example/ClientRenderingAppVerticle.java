@@ -5,6 +5,7 @@ import io.reactivex.Completable;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.web.Router;
+import io.vertx.reactivex.ext.web.client.WebClient;
 import io.vertx.reactivex.ext.web.handler.StaticHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +14,13 @@ public class ClientRenderingAppVerticle extends AbstractVerticle {
     private static final int HTTP_PORT = 8080;
     private static final Logger logger = LoggerFactory.getLogger(ClientRenderingAppVerticle.class);
 
+    private WebClient webClient;
+
     @Override
     public Completable rxStart() {
+
+        webClient = WebClient.create(vertx);
+
         Router router = Router.router(vertx);
         router.route().handler(StaticHandler.create());
 

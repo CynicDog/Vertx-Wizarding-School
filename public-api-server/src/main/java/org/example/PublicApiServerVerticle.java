@@ -4,6 +4,7 @@ import io.reactivex.Completable;
 import io.vertx.ext.auth.PubSecKeyOptions;
 import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.auth.jwt.JWTAuth;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.client.WebClient;
@@ -18,8 +19,7 @@ import java.io.IOException;
 
 import static org.example.config.RouterConfig.allowedHeaders;
 import static org.example.config.RouterConfig.allowedMethods;
-import static org.example.handler.AccountHandler.register;
-import static org.example.handler.AccountHandler.token;
+import static org.example.handler.AccountHandler.*;
 import static org.example.handler.UserHandler.fetchUser;
 
 public class PublicApiServerVerticle extends AbstractVerticle {
@@ -38,6 +38,7 @@ public class PublicApiServerVerticle extends AbstractVerticle {
         jwtAuth = SecretsHelper.populate(vertx);
 
         Router router = Router.router(vertx);
+        webClient = WebClient.create(vertx);
 
         // enable CORS for all routes, allow specific headers and methods
         router.route().handler(CorsHandler.create("*")
@@ -52,12 +53,22 @@ public class PublicApiServerVerticle extends AbstractVerticle {
         JWTAuthHandler jwtAuthHandler = JWTAuthHandler.create(jwtAuth);
 
         { // handles requests on account data
+            router.get(prefix + "/user/check").handler(ctx -> {
+                // duplicate validation either on username or email address
+                if (ctx.request().getParam("username") != null) {
+                    checkUsername(ctx, webClient);
+                } else {
+                    checkEmailAddress(ctx, webClient);
+                }
+            }
+
+            );
             router.post(prefix + "/register").handler(ctx -> register(ctx, webClient));
             router.post(prefix + "/token").handler(ctx -> token(ctx, webClient, jwtAuth));
         }
 
         { // handles requests on user profile data
-            router.get(prefix + "/:username").handler(jwtAuthHandler).handler(ctx -> fetchUser(ctx, webClient));
+            router.get(prefix + "/user/profile").handler(jwtAuthHandler).handler(ctx -> fetchUser(ctx, webClient));
         }
 
 
@@ -67,8 +78,12 @@ public class PublicApiServerVerticle extends AbstractVerticle {
                 .ignoreElement();
     }
 
-    public static void main(String[] args )
-    {
-        System.out.println( "Hello World!" );
+    public static void main(String[] args ) {
+        Vertx.vertx()
+                .rxDeployVerticle(new PublicApiServerVerticle())
+                .subscribe(
+                        ok -> logger.info("HTTP server started on port {}", HTTP_PORT),
+                        err -> logger.error(err.getMessage())
+                );
     }
 }

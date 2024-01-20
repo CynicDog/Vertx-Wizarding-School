@@ -1,7 +1,7 @@
 package org.example.handler;
 
+import io.reactivex.Maybe;
 import io.vertx.core.json.JsonObject;
-import io.vertx.reactivex.ext.auth.mongo.MongoUserUtil;
 import io.vertx.reactivex.ext.mongo.MongoClient;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ public class UserHandler {
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
 
     public static void fetchUser(RoutingContext ctx, MongoClient mongoClient) {
-        String username = ctx.pathParam("username");
+        String username = ctx.request().getParam("username");
 
         JsonObject query = new JsonObject()
                 .put("username", username);
@@ -36,7 +36,62 @@ public class UserHandler {
                         },
                         err -> {
                             logger.error(err.getMessage());
-                            ctx.fail(ctx.statusCode());
+                            ctx.fail(err);
                         });
+    }
+
+    public static void isUniqueUsername(RoutingContext ctx, MongoClient mongoClient) {
+        String username = ctx.request().getParam("username");
+
+        if (username != null) {
+            JsonObject query = new JsonObject().put("username", username);
+            mongoClient
+                    .rxFindOne("user", query, new JsonObject())
+                    .switchIfEmpty(Maybe.just(new JsonObject()))
+                    .toSingle()
+                    .subscribe(
+                            user -> {
+                                if (user.isEmpty()) {
+                                    ctx.response().setStatusCode(200).end("Username is unique");
+                                } else {
+                                    ctx.response().setStatusCode(409).end("Username is duplicated");
+                                }
+                            },
+                            err -> {
+                                logger.error(err.getMessage());
+                                ctx.fail(err);
+                            });
+        } else {
+            // Invalid request, missing or null email parameter
+            ctx.response().setStatusCode(400).end("Invalid request");
+        }
+    }
+
+    public static void isUniqueEmailAddress(RoutingContext ctx, MongoClient mongoClient) {
+        String emailAddress = ctx.request().getParam("email-address");
+
+        if (emailAddress != null) {
+            JsonObject query = new JsonObject().put("emailAddress", emailAddress);
+            mongoClient
+                    .rxFindOne("user", query, new JsonObject())
+                    .toSingle()
+                    .subscribe(
+                            user -> {
+                                if (user == null) {
+                                    // Email is unique, user not found
+                                    ctx.response().setStatusCode(200).end("Email is unique");
+                                } else {
+                                    // Email already exists, not unique
+                                    ctx.response().setStatusCode(409).end("Email is not unique");
+                                }
+                            },
+                            err -> {
+                                logger.error(err.getMessage());
+                                ctx.fail(err);
+                            });
+        } else {
+            // Invalid request, missing or null email parameter
+            ctx.response().setStatusCode(400).end("Invalid request");
+        }
     }
 }
