@@ -74,7 +74,14 @@ export class SignupStudent extends Component {
                         }));
                     });
                 }
-            })
+            }).catch(error => {
+                // TODO: Implementation on retries
+                this.setState((prevState) => ({
+                    usernameLoading: false,
+                    validationStatus: {...prevState.validationStatus, username: false},
+                    usernameMessage: 'An error happened with validating your input. Please try again later.',
+                }));
+            });
         }
     };
 
@@ -149,7 +156,14 @@ export class SignupStudent extends Component {
                         }));
                     });
                 }
-            })
+            }).catch(error => {
+                // TODO: Implementation on retries
+                this.setState((prevState) => ({
+                    usernameLoading: false,
+                    validationStatus: {...prevState.validationStatus, username: false},
+                    usernameMessage: 'An error happened with validating your input. Please try again later.',
+                }));
+            });
         }
     };
 
