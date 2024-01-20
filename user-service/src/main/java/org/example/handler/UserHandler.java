@@ -52,9 +52,9 @@ public class UserHandler {
                     .subscribe(
                             user -> {
                                 if (user.isEmpty()) {
-                                    ctx.response().setStatusCode(200).end("Username is unique");
+                                    ctx.response().setStatusCode(200).end();
                                 } else {
-                                    ctx.response().setStatusCode(409).end("Username is duplicated");
+                                    ctx.response().setStatusCode(409).end();
                                 }
                             },
                             err -> {
@@ -74,15 +74,14 @@ public class UserHandler {
             JsonObject query = new JsonObject().put("emailAddress", emailAddress);
             mongoClient
                     .rxFindOne("user", query, new JsonObject())
+                    .switchIfEmpty(Maybe.just(new JsonObject()))
                     .toSingle()
                     .subscribe(
                             user -> {
-                                if (user == null) {
-                                    // Email is unique, user not found
-                                    ctx.response().setStatusCode(200).end("Email is unique");
+                                if (user.isEmpty()) {
+                                    ctx.response().setStatusCode(200).end();
                                 } else {
-                                    // Email already exists, not unique
-                                    ctx.response().setStatusCode(409).end("Email is not unique");
+                                    ctx.response().setStatusCode(409).end();
                                 }
                             },
                             err -> {

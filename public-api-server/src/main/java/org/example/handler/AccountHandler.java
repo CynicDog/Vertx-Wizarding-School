@@ -29,7 +29,7 @@ public class AccountHandler {
                         },
                         err -> {
                             logger.error(err.getMessage());
-                            ctx.fail(err);
+                            ctx.response().setStatusCode(409).end("Username is already in use.");
                         }
                 );
     }
@@ -49,7 +49,7 @@ public class AccountHandler {
                         },
                         err -> {
                             logger.error(err.getMessage());
-                            ctx.fail(err);
+                            ctx.response().setStatusCode(409).end("Email address is already in use.");
                         }
                 );
     }
