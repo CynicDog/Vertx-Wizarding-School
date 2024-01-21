@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { Toast } from "bootstrap";
 
 export class Login extends Component {
 
@@ -11,7 +12,7 @@ export class Login extends Component {
         this.state = {
             username: "", password: "", validationStatus: {
                 username: null, password: null
-            }, usernameMessage: "", passwordMessage: "", loginProcessing: false, loginMessage: ""
+            }, usernameMessage: "", passwordMessage: "", loginProcessing: false
         };
     }
 
@@ -64,6 +65,15 @@ export class Login extends Component {
         });
     };
 
+    showMessagingToast = (message) => {
+        const messagingToast = new Toast(document.getElementById('messagingToast'));
+
+        const toastBody = messagingToast._element.querySelector('.toast-body');
+        toastBody.textContent = message;
+
+        messagingToast.show();
+    }
+
     handleLoginClick = () => {
 
         const {username, password} = this.state;
@@ -79,14 +89,15 @@ export class Login extends Component {
                     this.setState((prevState) => ({
                         loginProcessing: false, validationStatus: {username: true, password: true}
                     }));
-                    // save jwt and move on to home page ..
+                    // save jwt and move on to home page
                 } else if (response.status === 401) { // login failed for wrong credentials
                     response.text().then(errorMessage => {
                         this.setState((prevState) => ({
                             loginProcessing: false,
-                            validationStatus: {username: null, password: null},
-                            loginMessage: errorMessage
+                            validationStatus: {username: null, password: null}
                         }));
+
+                        this.showMessagingToast(errorMessage);
                     });
                 } else if (response.status === 500) { // when api-server(4000) is up but user-service(3000) is down
                     throw new Error();
@@ -101,9 +112,9 @@ export class Login extends Component {
                         username: '',
                         password: '',
                         loginProcessing: false,
-                        validationStatus: {username: null, password: null},
-                        loginMessage: "Failed login. Check your credentials again please."
+                        validationStatus: {username: null, password: null}
                     }));
+                    this.showMessagingToast('Login failed. Try again later please.');
                 }
             });
         }
@@ -157,6 +168,18 @@ export class Login extends Component {
                                     )}
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="toast-container position-fixed bottom-0 end-0 p-4">
+                    <div id="messagingToast" className="toast align-items-center text-bg-danger border-0"
+                         role="alert"
+                         aria-live="assertive" aria-atomic="true">
+                        <div className="d-flex">
+                            <div className="toast-body">
+                            </div>
+                            <button type="button" className="btn-close btn-close-white me-2 m-auto"
+                                    data-bs-dismiss="toast" aria-label="Close"></button>
                         </div>
                     </div>
                 </div>

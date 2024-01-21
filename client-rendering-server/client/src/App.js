@@ -8,6 +8,9 @@ import { SignupStudent } from "./component/signup/Signup-student";
 import { SignupTeacher } from "./component/signup/Signup-teacher";
 import { Login } from "./component/Login/Login";
 
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.bundle'
+
 export default class App extends Component {
     render() {
         return (
