@@ -25,10 +25,11 @@ public class RegisterHandler {
         JsonObject supplementaryDetails = new JsonObject()
                 .put("$set", new JsonObject()
                         .put("emailAddress", body.getString("emailAddress"))
-                        .put("house", body.getString("house"))
-                        .put("wand", body.getString("wand"))
-                        .put("patronus", body.getString("patronus"))
-                        .put("pet", body.getString("pet")));
+//                        .put("house", body.getString("house"))
+//                        .put("wand", body.getString("wand"))
+//                        .put("patronus", body.getString("patronus"))
+//                        .put("pet", body.getString("pet"))
+                );
 
         mongoUserUtil
                 .rxCreateUser(username, password)

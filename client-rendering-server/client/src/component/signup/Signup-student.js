@@ -68,10 +68,9 @@ export class SignupStudent extends Component {
                 }).then((response) => {
                     if (response.ok) {
                         this.setState((prevState) => ({
-                            usernameLoading: false,
-                            validationStatus: {...prevState.validationStatus, username: true}
+                            usernameLoading: false, validationStatus: {...prevState.validationStatus, username: true}
                         }));
-                    } else {
+                    } else if (response.status === 409) {
                         response.text().then(errorMessage => {
                             this.setState((prevState) => ({
                                 usernameLoading: false,
@@ -79,8 +78,12 @@ export class SignupStudent extends Component {
                                 usernameMessage: errorMessage,
                             }));
                         });
+                    } else if (response.status === 500) {
+                        // when api-server(4000) is up but user-service(3000) is down
+                        throw new Error();
                     }
                 }).catch(error => {
+                    // when api-server(4000) is down
                     if (retryCount < this.max_retries) {
                         setTimeout(() => {
                             validateUsername.call(this, username, retryCount + 1);
@@ -94,6 +97,7 @@ export class SignupStudent extends Component {
                     }
                 });
             }
+            // Call the function with the initial parameters
             validateUsername.call(this, username);
         }
     };
@@ -162,7 +166,7 @@ export class SignupStudent extends Component {
                         this.setState((prevState) => ({
                             emailLoading: false, validationStatus: {...prevState.validationStatus, email: true,},
                         }));
-                    } else {
+                    } else if (response.status === 409) {
                         response.text().then(errorMessage => {
                             this.setState((prevState) => ({
                                 emailLoading: false,
@@ -170,8 +174,12 @@ export class SignupStudent extends Component {
                                 emailMessage: errorMessage,
                             }));
                         });
+                    } else if (response.status === 500) {
+                        // when api-server(4000) is up but user-service(3000) is down
+                        throw new Error();
                     }
                 }).catch(error => {
+                    // when api-server(4000) is down
                     if (retryCount < this.max_retries) {
                         // Retry after the specified interval
                         setTimeout(() => {
@@ -181,18 +189,42 @@ export class SignupStudent extends Component {
                         this.setState((prevState) => ({
                             emailLoading: false,
                             validationStatus: {...prevState.validationStatus, email: false},
-                            emailMessage: 'An error happened with validating your input. Please try again later.',
+                            emailMessage: "An error happened with validating your input. Please try again later."
                         }));
                     }
                 });
             }
-            // Call the function with the initial parameters
             validateEmail.call(this, email);
         }
     };
 
     handleSignupClick = () => {
-        // Implement signup logic here
+
+        const { username, password, email } = this.state;
+
+        function register(retryCount = 0) {
+            fetch(`http://localhost:4000/api/v1/user/register`, {
+                method: "POST",
+                body: JSON.stringify({
+                    "username": username,
+                    "password": password,
+                    "emailAddress": email
+                })
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = "/";
+                }
+            }).catch(error => {
+                if (retryCount < this.max_retries) {
+                    setTimeout(() => {
+                        register.call(this, retryCount + 1);
+                    }, this.retry_interval);
+                } else {
+                    this.setState({registerPopupVisible: true});
+                }
+            })
+        }
+        register.call(this);
     };
 
     render() {
@@ -212,7 +244,7 @@ export class SignupStudent extends Component {
                 <div className="col-md-6">
                     <div className="card shadow my-5 p-5">
                         <div className="fw-lighter fs-2">Student Sign Up</div>
-                        <div className="card-body my-3">
+                        <div className="card-body my-2">
                             <div className="form-floating my-3">
                                 <input id="username" type="text" name="username" placeholder="" value={username}
                                        className={`form-control ${ validationStatus.username === false ? "is-invalid" : validationStatus.username === true ? "is-valid" : "" }`}
