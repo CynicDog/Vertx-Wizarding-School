@@ -5,7 +5,7 @@ export class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: '',
+            greetingMessage: '',
             isLoaded: false
         }
     }
@@ -16,20 +16,17 @@ export class Home extends Component {
             .then(text => {
                 this.setState({
                     isLoaded: true,
-                    item: text
+                    greetingMessage: text
                 })
             });
     }
 
     render() {
-        let item = this.state.item;
+        const {greetingMessage} = this.state;
 
         return (
             <div>
-                <span>Welcome to Vertx Wizarding School.</span>
-                <ul>
-                    <span>{item}</span>
-                </ul>
+                {greetingMessage}
             </div>
         );
     }
