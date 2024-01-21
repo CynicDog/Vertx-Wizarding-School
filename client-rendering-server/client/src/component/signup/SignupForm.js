@@ -42,7 +42,7 @@ export class SignupForm extends Component {
 
         // reset validation status
         this.setState((prevState) => ({
-            validationStatus: {...prevState.validationStatus, username: false}
+            validationStatus: {...prevState.validationStatus, username: null}
         }));
 
         if (username.trim() === '') {
@@ -71,7 +71,7 @@ export class SignupForm extends Component {
                         this.setState((prevState) => ({
                             usernameLoading: false, validationStatus: {...prevState.validationStatus, username: true}
                         }));
-                    } else if (response.status === 409) {
+                    } else if (response.status === 409) { // a conflict occurs with username already in use
                         response.text().then(errorMessage => {
                             this.setState((prevState) => ({
                                 usernameLoading: false,
@@ -79,12 +79,10 @@ export class SignupForm extends Component {
                                 usernameMessage: errorMessage,
                             }));
                         });
-                    } else if (response.status === 500) {
-                        // when api-server(4000) is up but user-service(3000) is down
+                    } else if (response.status === 500) { // when api-server(4000) is up but user-service(3000) is down
                         throw new Error();
                     }
-                }).catch(error => {
-                    // when api-server(4000) is down
+                }).catch(error => { // when api-server(4000) is down
                     if (retryCount < this.max_retries) {
                         setTimeout(() => {
                             validateUsername.call(this, username, retryCount + 1);
@@ -110,7 +108,7 @@ export class SignupForm extends Component {
 
         // reset validation status
         this.setState((prevState) => ({
-            validationStatus: {...prevState.validationStatus, password: false}
+            validationStatus: {...prevState.validationStatus, password: null}
         }));
 
         if (password.trim() === '') {
@@ -139,7 +137,7 @@ export class SignupForm extends Component {
 
         // reset validation status
         this.setState((prevState) => ({
-            validationStatus: {...prevState.validationStatus, email: false}
+            validationStatus: {...prevState.validationStatus, email: null}
         }));
 
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -167,7 +165,7 @@ export class SignupForm extends Component {
                         this.setState((prevState) => ({
                             emailLoading: false, validationStatus: {...prevState.validationStatus, email: true,},
                         }));
-                    } else if (response.status === 409) {
+                    } else if (response.status === 409) { // a conflict occurs with username already in use
                         response.text().then(errorMessage => {
                             this.setState((prevState) => ({
                                 emailLoading: false,
@@ -175,14 +173,11 @@ export class SignupForm extends Component {
                                 emailMessage: errorMessage,
                             }));
                         });
-                    } else if (response.status === 500) {
-                        // when api-server(4000) is up but user-service(3000) is down
+                    } else if (response.status === 500) { // when api-server(4000) is up but user-service(3000) is down
                         throw new Error();
                     }
-                }).catch(error => {
-                    // when api-server(4000) is down
+                }).catch(error => { // when api-server(4000) is down
                     if (retryCount < this.max_retries) {
-                        // Retry after the specified interval
                         setTimeout(() => {
                             validateEmail.call(this, email, retryCount + 1);
                         }, this.retry_interval);
@@ -259,7 +254,6 @@ export class SignupForm extends Component {
                                         <div id="usernameLoadingSpinner"
                                              className={`spinner-border spinner-border-sm text-primary m-1 ${usernameLoading ? "" : "d-none"}`}
                                              role="status">
-                                            <span className="visually-hidden">Loading...</span>
                                         </div>
                                     </div>
                                 </label>
@@ -269,7 +263,7 @@ export class SignupForm extends Component {
                                 </div>
                             </div>
                             <div className="form-floating my-3">
-                                <input id="password" type="password"  name="password" placeholder="" value={password}
+                                <input id="password" type="password" name="password" placeholder="" value={password}
                                        className={`form-control ${ validationStatus.password === false? "is-invalid" : validationStatus.password === true? "is-valid" : "" }`}
                                        onBlur={this.handlePasswordBlur}
                                        onChange={this.handleInputChange}
@@ -293,7 +287,6 @@ export class SignupForm extends Component {
                                         <div id="emailLoadingSpinner"
                                              className={`spinner-border spinner-border-sm text-primary m-1 ${emailLoading ? "" : "d-none"}`}
                                              role="status">
-                                            <span className="visually-hidden">Loading...</span>
                                         </div>
                                     </div>
                                 </label>
