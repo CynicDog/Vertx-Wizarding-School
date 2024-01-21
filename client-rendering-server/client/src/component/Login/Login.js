@@ -86,13 +86,19 @@ export class Login extends Component {
                 })
             }).then(response => {
                 if (response.ok) {
-                    this.setState((prevState) => ({
-                        loginProcessing: false, validationStatus: {username: true, password: true}
-                    }));
-                    // save jwt and move on to home page
+                    response.text().then(jwt => {
+                        sessionStorage.setItem('jwt', jwt)
+                        sessionStorage.setItem('username', username)
+                        this.setState((prevState) => ({
+                            loginProcessing: false, validationStatus: {username: true, password: true}
+                        }));
+                        window.location.href = "/";
+                    })
                 } else if (response.status === 401) { // login failed for wrong credentials
                     response.text().then(errorMessage => {
                         this.setState((prevState) => ({
+                            username: '',
+                            password: '',
                             loginProcessing: false,
                             validationStatus: {username: null, password: null}
                         }));
