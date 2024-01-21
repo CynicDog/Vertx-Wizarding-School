@@ -14,8 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.example.config.MongoConfig.mongoConfig;
-import static org.example.handler.RegisterHandler.authenticate;
-import static org.example.handler.RegisterHandler.register;
+import static org.example.handler.RegisterHandler.*;
 import static org.example.handler.UserHandler.*;
 
 public class UserServiceVerticle extends AbstractVerticle {

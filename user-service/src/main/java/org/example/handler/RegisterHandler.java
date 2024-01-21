@@ -56,6 +56,64 @@ public class RegisterHandler {
                 );
     }
 
+    public static void isUniqueUsername(RoutingContext ctx, MongoClient mongoClient) {
+        String username = ctx.request().getParam("username");
+
+        if (username != null) {
+            JsonObject query = new JsonObject().put("username", username);
+            mongoClient
+                    .rxFindOne("user", query, new JsonObject())
+                    .switchIfEmpty(Maybe.just(new JsonObject()))
+                    .toSingle()
+                    .subscribe(
+                            user -> {
+                                if (user.isEmpty()) {
+                                    // unique
+                                    ctx.response().setStatusCode(200).end();
+                                } else {
+                                    // duplicate
+                                    ctx.response().setStatusCode(409).end();
+                                }
+                            },
+                            err -> {
+                                logger.error(err.getMessage());
+                                ctx.fail(err);
+                            });
+        } else {
+            // Invalid request, missing or null email parameter
+            ctx.response().setStatusCode(400).end("Invalid request");
+        }
+    }
+
+    public static void isUniqueEmailAddress(RoutingContext ctx, MongoClient mongoClient) {
+        String emailAddress = ctx.request().getParam("email-address");
+
+        if (emailAddress != null) {
+            JsonObject query = new JsonObject().put("emailAddress", emailAddress);
+            mongoClient
+                    .rxFindOne("user", query, new JsonObject())
+                    .switchIfEmpty(Maybe.just(new JsonObject()))
+                    .toSingle()
+                    .subscribe(
+                            user -> {
+                                if (user.isEmpty()) {
+                                    // unique
+                                    ctx.response().setStatusCode(200).end();
+                                } else {
+                                    // duplicate
+                                    ctx.response().setStatusCode(409).end();
+                                }
+                            },
+                            err -> {
+                                logger.error(err.getMessage());
+                                ctx.fail(err);
+                            });
+        } else {
+            // Invalid request, missing or null email parameter
+            ctx.response().setStatusCode(400).end("Invalid request");
+        }
+    }
+
     public static void authenticate(RoutingContext ctx, MongoAuthentication mongoAuthProvider) {
         mongoAuthProvider.rxAuthenticate(ctx.getBodyAsJson())
                 .subscribe(
