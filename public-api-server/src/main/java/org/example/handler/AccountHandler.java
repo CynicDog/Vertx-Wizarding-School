@@ -1,5 +1,6 @@
 package org.example.handler;
 
+import io.vertx.core.impl.NoStackTraceThrowable;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.JWTOptions;
 import io.vertx.reactivex.ext.auth.jwt.JWTAuth;
@@ -116,7 +117,12 @@ public class AccountHandler {
                         },
                         err -> {
                             logger.error(err.getMessage());
-                            ctx.fail(err);
+                            if (err instanceof java.net.ConnectException) {
+                                // detects if remote server is down
+                                ctx.response().setStatusCode(500).end();
+                            } else {
+                                ctx.response().setStatusCode(401).end("Wrong credentials. Check your username and password again please.");
+                            }
                         });
     }
 }
