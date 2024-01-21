@@ -1,6 +1,10 @@
 import React, {Component} from "react";
 
 export class SignupStudent extends Component {
+
+    max_retries = 2;
+    retry_interval = 2000; // 2 seconds
+
     constructor(props) {
         super(props);
 
@@ -57,31 +61,40 @@ export class SignupStudent extends Component {
             const usernameEncoded = encodeURIComponent(username.trim());
 
             this.setState({ usernameLoading: true } )
-            fetch(`http://localhost:4000/api/v1/user/check?username=${usernameEncoded}`, {
-                method: "GET",
-            }).then((response) => {
-                if (response.ok) {
-                    this.setState((prevState) => ({
-                        usernameLoading: false,
-                        validationStatus: {...prevState.validationStatus, username: true}
-                    }));
-                } else {
-                    response.text().then(errorMessage => {
+
+            function validateUsername(username, retryCount = 0) {
+                fetch(`http://localhost:4000/api/v1/user/check?username=${usernameEncoded}`, {
+                    method: "GET",
+                }).then((response) => {
+                    if (response.ok) {
+                        this.setState((prevState) => ({
+                            usernameLoading: false,
+                            validationStatus: {...prevState.validationStatus, username: true}
+                        }));
+                    } else {
+                        response.text().then(errorMessage => {
+                            this.setState((prevState) => ({
+                                usernameLoading: false,
+                                validationStatus: {...prevState.validationStatus, username: false},
+                                usernameMessage: errorMessage,
+                            }));
+                        });
+                    }
+                }).catch(error => {
+                    if (retryCount < this.max_retries) {
+                        setTimeout(() => {
+                            validateUsername.call(this, username, retryCount + 1);
+                        }, this.retry_interval);
+                    } else {
                         this.setState((prevState) => ({
                             usernameLoading: false,
                             validationStatus: {...prevState.validationStatus, username: false},
-                            usernameMessage: errorMessage,
+                            usernameMessage: 'An error happened with validating your input. Please try again later.',
                         }));
-                    });
-                }
-            }).catch(error => {
-                // TODO: Implementation on retries
-                this.setState((prevState) => ({
-                    usernameLoading: false,
-                    validationStatus: {...prevState.validationStatus, username: false},
-                    usernameMessage: 'An error happened with validating your input. Please try again later.',
-                }));
-            });
+                    }
+                });
+            }
+            validateUsername.call(this, username);
         }
     };
 
@@ -140,30 +153,41 @@ export class SignupStudent extends Component {
         } else {
             // perform async duplication validation
             this.setState({ emailLoading: true })
-            fetch(`http://localhost:4000/api/v1/user/check?email-address=${email}`, {
-                method: "GET",
-            }).then((response) => {
-                if (response.ok) {
-                    this.setState((prevState) => ({
-                        emailLoading: false, validationStatus: {...prevState.validationStatus, email: true,}
-                    }));
-                } else {
-                    response.text().then(errorMessage => {
+
+            function validateEmail(email, retryCount = 0) {
+                fetch(`http://localhost:4000/api/v1/user/check?email-address=${email}`, {
+                    method: "GET",
+                }).then((response) => {
+                    if (response.ok) {
+                        this.setState((prevState) => ({
+                            emailLoading: false, validationStatus: {...prevState.validationStatus, email: true,},
+                        }));
+                    } else {
+                        response.text().then(errorMessage => {
+                            this.setState((prevState) => ({
+                                emailLoading: false,
+                                validationStatus: {...prevState.validationStatus, email: false,},
+                                emailMessage: errorMessage,
+                            }));
+                        });
+                    }
+                }).catch(error => {
+                    if (retryCount < this.max_retries) {
+                        // Retry after the specified interval
+                        setTimeout(() => {
+                            validateEmail.call(this, email, retryCount + 1);
+                        }, this.retry_interval);
+                    } else {
                         this.setState((prevState) => ({
                             emailLoading: false,
-                            validationStatus: {...prevState.validationStatus, email: false,},
-                            emailMessage: errorMessage,
+                            validationStatus: {...prevState.validationStatus, email: false},
+                            emailMessage: 'An error happened with validating your input. Please try again later.',
                         }));
-                    });
-                }
-            }).catch(error => {
-                // TODO: Implementation on retries
-                this.setState((prevState) => ({
-                    usernameLoading: false,
-                    validationStatus: {...prevState.validationStatus, username: false},
-                    usernameMessage: 'An error happened with validating your input. Please try again later.',
-                }));
-            });
+                    }
+                });
+            }
+            // Call the function with the initial parameters
+            validateEmail.call(this, email);
         }
     };
 
