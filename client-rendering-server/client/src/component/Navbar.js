@@ -18,6 +18,9 @@ const Navbar = () => {
                         <li className="nav-item">
                             <a className="nav-link active" aria-current="page" href="/house">🛡️ Houses</a>
                         </li>
+                        <li className="nav-item">
+                            <a className="nav-link active" aria-current="page" href="/course">📚 Course</a>
+                        </li>
                         {isLoggedIn && (
                             <li className="nav-item">
                                 <a className="nav-link active" href={`/my-page?username=${sessionStorage.getItem('username')}`}>

@@ -10,6 +10,9 @@ import { Login } from "./component/Login/Login";
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle'
+import Course from "./component/course/Course";
+import House from "./component/house/House";
+import MyPage from "./component/userpage/MyPage";
 
 export default class App extends Component {
     render() {
@@ -21,9 +24,11 @@ export default class App extends Component {
                     )}
                     <Route path='/users' element={<Users />} />
                     <Route path='/signup' element={<SingupEntry />} />
-                    {/* Use the useSignupRoute function to render the appropriate Signup component */}
                     <Route path='/signup/:type' element={<SignupRouter />} />
                     <Route path='/login' element={<Login /> }></Route>
+                    <Route path='/my-page' element={<MyPage />} />
+                    <Route path='/house' element={<House />} />
+                    <Route path='/course' element={<Course />} />
                 </Routes>
             </Layout>
         );
