@@ -1,14 +1,16 @@
 package org.example.handler;
 
 import io.reactivex.Maybe;
-import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.ext.auth.mongo.MongoAuthentication;
 import io.vertx.reactivex.ext.auth.mongo.MongoUserUtil;
 import io.vertx.reactivex.ext.mongo.MongoClient;
 import io.vertx.reactivex.ext.web.RoutingContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
 
 public class RegisterHandler {
 
@@ -25,6 +27,8 @@ public class RegisterHandler {
         JsonObject supplementaryDetails = new JsonObject()
                 .put("$set", new JsonObject()
                         .put("emailAddress", body.getString("emailAddress"))
+                        .put("type", body.getString("type"))
+                        .put("createdAt", new Date().getTime())
 //                        .put("house", body.getString("house"))
 //                        .put("wand", body.getString("wand"))
 //                        .put("patronus", body.getString("patronus"))

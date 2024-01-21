@@ -21,6 +21,8 @@ public class UserHandler {
                 .put("_id", 0)
                 .put("username", 1)
                 .put("emailAddress", 1)
+                .put("type", 1)
+                .put("createdAt", 1)
                 .put("house", 1)
                 .put("wand", 1)
                 .put("patronus", 1)
