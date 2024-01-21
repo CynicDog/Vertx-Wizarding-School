@@ -58,7 +58,7 @@ public class AccountHandler {
                                 // detects if remote server is down
                                 ctx.response().setStatusCode(500).end();
                             } else {
-                                ctx.response().setStatusCode(409).end("Username is already in use.");
+                                ctx.response().setStatusCode(409).end("Email address is already in use.");
                             }
                         }
                 );
