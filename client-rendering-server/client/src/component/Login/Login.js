@@ -91,16 +91,12 @@ export class Login extends Component {
                 } else if (response.status === 500) { // when api-server(4000) is up but user-service(3000) is down
                     throw new Error();
                 }
-            }).catch(error => {
-                console.log("Catch block executed with error:", error);
-
+            }).catch(error => { // when api-server(4000) is down
                 if (retryCount < this.max_retries) {
-                    console.log("Retrying...");
                     setTimeout(() => {
                         login.call(this, retryCount + 1);
                     }, this.retry_interval);
                 } else {
-                    console.log("Max retries reached. Setting error state...");
                     this.setState((prevState) => ({
                         username: '',
                         password: '',

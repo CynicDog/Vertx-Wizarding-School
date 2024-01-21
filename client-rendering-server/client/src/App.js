@@ -5,7 +5,8 @@ import { Users } from "./component/Users";
 import { Home } from "./component/Home";
 import { SingupEntry } from "./component/signup/Singup-entry";
 import { SignupStudent } from "./component/signup/Signup-student";
-import { SignupTeacher } from "./component/signup/Signup-teacher"; // Import the SignupTeacher component
+import { SignupTeacher } from "./component/signup/Signup-teacher";
+import { Login } from "./component/Login/Login";
 
 export default class App extends Component {
     render() {
@@ -19,6 +20,7 @@ export default class App extends Component {
                     <Route path='/signup' element={<SingupEntry />} />
                     {/* Use the useSignupRoute function to render the appropriate Signup component */}
                     <Route path='/signup/:type' element={<SignupRouter />} />
+                    <Route path='/login' element={<Login /> }></Route>
                 </Routes>
             </Layout>
         );

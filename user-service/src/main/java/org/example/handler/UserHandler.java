@@ -23,10 +23,11 @@ public class UserHandler {
                 .put("emailAddress", 1)
                 .put("type", 1)
                 .put("createdAt", 1)
-                .put("house", 1)
-                .put("wand", 1)
-                .put("patronus", 1)
-                .put("pet", 1);
+//                .put("house", 1)
+//                .put("wand", 1)
+//                .put("patronus", 1)
+//                .put("pet", 1)
+                ;
 
         mongoClient
                 .rxFindOne("user", query, fields)

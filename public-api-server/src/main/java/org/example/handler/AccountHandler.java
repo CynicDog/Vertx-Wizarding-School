@@ -80,7 +80,7 @@ public class AccountHandler {
                         });
     }
 
-    public static void token(RoutingContext ctx, WebClient webClient, JWTAuth jwtAuth) {
+    public static void login(RoutingContext ctx, WebClient webClient, JWTAuth jwtAuth) {
         JsonObject payload = ctx.getBodyAsJson();
         String username = payload.getString("username");
 
@@ -89,21 +89,24 @@ public class AccountHandler {
                 .expect(ResponsePredicate.SC_SUCCESS)
                 .rxSendJson(payload)
                 .flatMap(resp -> {
+                    logger.info("response on the request on POST :3000/authenticate reads: {}", resp.statusMessage());
                     // fetch supplementary details on user
-                    return webClient.get(3000, "localhost", "/" + username)
+                    return webClient.get(3000, "localhost", "/fetch-user?username=" + username)
                             .expect(ResponsePredicate.SC_OK)
                             .as(BodyCodec.jsonObject())
                             .rxSend();
                 })
-                .map(resp -> resp.body().getString("patronus"))
-                .map(patronus -> {
-                    JsonObject claims = new JsonObject().put("patronus", patronus);
+                .map(resp -> {
+                    logger.info("response on the request on GET :3000/{} reads: {}", username, resp.statusMessage());
+                    return resp.body().getString("emailAddress");
+                })
+                .map(email -> {
+                    JsonObject claims = new JsonObject().put("emailAddress", email);
                     JWTOptions jwtOptions = new JWTOptions()
                             .setAlgorithm("RS256")
                             .setExpiresInMinutes(43_200) // a month
                             .setIssuer("Vertx-Wizarding-School")
                             .setSubject(username);
-
                     return jwtAuth.generateToken(claims, jwtOptions);
                 })
                 .subscribe(

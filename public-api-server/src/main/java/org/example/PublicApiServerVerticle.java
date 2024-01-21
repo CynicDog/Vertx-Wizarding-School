@@ -1,8 +1,6 @@
 package org.example;
 
 import io.reactivex.Completable;
-import io.vertx.ext.auth.PubSecKeyOptions;
-import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.auth.jwt.JWTAuth;
@@ -14,8 +12,6 @@ import io.vertx.reactivex.ext.web.handler.JWTAuthHandler;
 import org.example.util.SecretsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 import static org.example.config.RouterConfig.allowedHeaders;
 import static org.example.config.RouterConfig.allowedMethods;
@@ -60,11 +56,9 @@ public class PublicApiServerVerticle extends AbstractVerticle {
                 } else {
                     checkEmailAddress(ctx, webClient);
                 }
-            }
-
-            );
+            });
             router.post(prefix + "/user/register").handler(ctx -> register(ctx, webClient));
-            router.post(prefix + "/user/token").handler(ctx -> token(ctx, webClient, jwtAuth));
+            router.post(prefix + "/user/login").handler(ctx -> login(ctx, webClient, jwtAuth));
         }
 
         { // handles requests on user profile data
