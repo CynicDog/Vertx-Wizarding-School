@@ -63,8 +63,8 @@ public class PublicApiServerVerticle extends AbstractVerticle {
             }
 
             );
-            router.post(prefix + "/register").handler(ctx -> register(ctx, webClient));
-            router.post(prefix + "/token").handler(ctx -> token(ctx, webClient, jwtAuth));
+            router.post(prefix + "/user/register").handler(ctx -> register(ctx, webClient));
+            router.post(prefix + "/user/token").handler(ctx -> token(ctx, webClient, jwtAuth));
         }
 
         { // handles requests on user profile data
