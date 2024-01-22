@@ -42,4 +42,22 @@ public class UserHandler {
                             ctx.fail(err);
                         });
     }
+
+    public static void postProfilePhoto(RoutingContext ctx, MongoClient mongoClient) {
+        JsonObject query = new JsonObject().put("username", ctx.request().getParam("username"));
+        JsonObject photoData = new JsonObject().put("$set", new JsonObject().put("profilePhoto", ctx.getBodyAsJson()));
+
+        mongoClient.rxFindOneAndUpdate("user", query, photoData)
+                .ignoreElement()
+                .subscribe(
+                        () -> {
+                            logger.info("Successfully updated.");
+                            ctx.response().end();
+                        },
+                        err -> {
+                            logger.error(err.getMessage());
+                            ctx.fail(err);
+                        }
+                );
+    }
 }

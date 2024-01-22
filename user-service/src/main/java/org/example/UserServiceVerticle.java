@@ -40,8 +40,6 @@ public class UserServiceVerticle extends AbstractVerticle {
 
         router.post("/register").handler(ctx -> register(ctx, mongoClient, mongoUserUtil));
         router.post("/authenticate").handler(ctx -> authenticate(ctx, mongoAuthProvider));
-
-        router.get("/fetch-user").handler(ctx -> fetchUser(ctx, mongoClient));
         router.get("/is-unique").handler(ctx -> {
             // duplicate validation either on username or email address
             if (ctx.request().getParam("username") != null) {
@@ -50,6 +48,9 @@ public class UserServiceVerticle extends AbstractVerticle {
                 isUniqueEmailAddress(ctx, mongoClient);
             }
         });
+
+        router.get("/fetch-user").handler(ctx -> fetchUser(ctx, mongoClient));
+        router.post("/user-profile-photo").handler(ctx -> postProfilePhoto(ctx, mongoClient));
 
         return vertx.createHttpServer()
                 .requestHandler(router)

@@ -17,6 +17,7 @@ import static org.example.config.RouterConfig.allowedHeaders;
 import static org.example.config.RouterConfig.allowedMethods;
 import static org.example.handler.AccountHandler.*;
 import static org.example.handler.UserHandler.fetchUser;
+import static org.example.handler.UserHandler.postUserProfilePhoto;
 
 public class PublicApiServerVerticle extends AbstractVerticle {
 
@@ -44,7 +45,7 @@ public class PublicApiServerVerticle extends AbstractVerticle {
         // to handle JSON data contained in the body of those requests
         BodyHandler bodyHandler = BodyHandler.create();
         router.post().handler(bodyHandler);
-        router.post().handler(bodyHandler);
+        router.put().handler(bodyHandler);
 
         JWTAuthHandler jwtAuthHandler = JWTAuthHandler.create(jwtAuth);
 
@@ -63,6 +64,7 @@ public class PublicApiServerVerticle extends AbstractVerticle {
 
         { // handles requests on user profile data
             router.get(prefix + "/user/profile").handler(jwtAuthHandler).handler(ctx -> fetchUser(ctx, webClient));
+            router.post(prefix + "/user/photo").handler(jwtAuthHandler).handler(ctx -> postUserProfilePhoto(ctx, webClient));
         }
 
 
