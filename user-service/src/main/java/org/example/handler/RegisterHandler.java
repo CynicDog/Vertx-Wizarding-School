@@ -29,6 +29,7 @@ public class RegisterHandler {
                         .put("emailAddress", body.getString("emailAddress"))
                         .put("type", body.getString("type"))
                         .put("createdAt", new Date().getTime())
+                        .put("profilePhoto", "")
 //                        .put("house", body.getString("house"))
 //                        .put("wand", body.getString("wand"))
 //                        .put("patronus", body.getString("patronus"))
@@ -50,7 +51,7 @@ public class RegisterHandler {
                             ctx.response().end();
                         },
                         err -> {
-                            logger.info(err.getMessage());
+                            logger.error(err.getMessage());
                             ctx.fail(err);
                         }
                 );
