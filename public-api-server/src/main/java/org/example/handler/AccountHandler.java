@@ -1,6 +1,5 @@
 package org.example.handler;
 
-import io.vertx.core.impl.NoStackTraceThrowable;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.JWTOptions;
 import io.vertx.reactivex.ext.auth.jwt.JWTAuth;
@@ -25,7 +24,7 @@ public class AccountHandler {
                 .rxSend()
                 .subscribe(
                         ok -> {
-                            logger.info(ok.statusMessage());
+                            logger.info("response on the request on `GET :3000/is-unique?username` reads: {}", ok.statusMessage());
                             ctx.response().setStatusCode(ok.statusCode()).end();
                         },
                         err -> {
@@ -50,7 +49,7 @@ public class AccountHandler {
                 .rxSend()
                 .subscribe(
                         ok -> {
-                            logger.info(ok.statusMessage());
+                            logger.info("response on the request on `GET :3000/is-unique?email-address` reads: {}", ok.statusMessage());
                             ctx.response().setStatusCode(ok.statusCode()).end();
                         },
                         err -> {
@@ -71,9 +70,9 @@ public class AccountHandler {
                 .putHeader("Content-Type", "application/json")
                 .rxSendJson(ctx.getBodyAsJson())
                 .subscribe(
-                        response -> {
-                            logger.info(response.statusMessage());
-                            ctx.response().setStatusCode(response.statusCode()).end();
+                        resp -> {
+                            logger.info("response on the request on `POST :3000/register` reads: {}", resp.statusMessage());
+                            ctx.response().setStatusCode(resp.statusCode()).end();
                         },
                         err -> {
                             logger.error(err.getMessage());
@@ -90,7 +89,7 @@ public class AccountHandler {
                 .expect(ResponsePredicate.SC_SUCCESS)
                 .rxSendJson(payload)
                 .flatMap(resp -> {
-                    logger.info("response on the request on POST :3000/authenticate reads: {}", resp.statusMessage());
+                    logger.info("response on the request on `POST :3000/authenticate` reads: {}", resp.statusMessage());
                     // fetch supplementary details on user
                     return webClient.get(3000, "localhost", "/fetch-user?username=" + username)
                             .expect(ResponsePredicate.SC_OK)
@@ -98,7 +97,7 @@ public class AccountHandler {
                             .rxSend();
                 })
                 .map(resp -> {
-                    logger.info("response on the request on GET :3000/{} reads: {}", username, resp.statusMessage());
+                    logger.info("response on the request on `GET :3000/fetch-user?username` {} reads: {}", username, resp.statusMessage());
                     return resp.body().getString("emailAddress");
                 })
                 .map(email -> {
