@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import Image from "image-js";
+import { Popover } from "bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap styles
+import './MyPage.css'; // Import your custom CSS file
 
 class MyPage extends Component {
     constructor(props) {
@@ -14,6 +17,7 @@ class MyPage extends Component {
     componentDidMount() {
         const username = new URLSearchParams(window.location.search).get('username');
         this.setState({ username });
+        this.initPopover();
     }
 
     handleImageClick = () => {
@@ -69,6 +73,20 @@ class MyPage extends Component {
         }
     };
 
+    initPopover() {
+        const imagePopover = new Popover(this.userImage, {
+            content: "This is a popover!",
+            placement: 'right',
+            trigger: 'hover',
+            // TODO: Popover styling
+            // template: '' +
+            //     '<div class="popover" role="tooltip">' +
+            //     '   <div class="popover-arrow"></div>' +
+            //     '   <div class="popover-inner"></div>' +
+            //     '</div>'
+        });
+    }
+
     render() {
         const { username, userImageSrc } = this.state;
         return (
@@ -81,6 +99,7 @@ class MyPage extends Component {
                     src={userImageSrc}
                     alt={`${username}'s profile`}
                     ref={(img) => (this.userImage = img)}
+                    data-bs-toggle="popover"
                 />
                 <input
                     type="file"
