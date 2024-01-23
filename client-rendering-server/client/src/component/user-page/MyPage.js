@@ -53,6 +53,7 @@ class MyPage extends Component {
                     },
                 })
                     .then(response => {
+                        // TODO: implementation on retry
                         // Handle the response from the server
                         if (!response.ok) {
                             throw new Error('Failed to upload photo');
