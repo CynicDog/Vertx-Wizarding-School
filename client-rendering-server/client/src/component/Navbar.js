@@ -32,11 +32,8 @@ const Navbar = () => {
                     <ul className="navbar-nav mx-4">
                         {isLoggedIn ? (
                             <>
-                                <li>
-                                    <img src="/images/user-profile-photo"/>
-                                </li>
+                                <i className="bi bi-bell fs-5 text-secondary m-1"></i>
                                 <li className="nav-item active">
-                                    <img src="../../public/favicon.ico" alt="../../public/favicon.ico"/>
                                     <a className="nav-link" href="/home" onClick={() => {sessionStorage.clear();}}>
                                         Logout
                                     </a>
