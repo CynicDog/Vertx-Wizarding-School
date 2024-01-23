@@ -78,12 +78,7 @@ class MyPage extends Component {
             content: "This is a popover!",
             placement: 'right',
             trigger: 'hover',
-            // TODO: Popover styling
-            // template: '' +
-            //     '<div class="popover" role="tooltip">' +
-            //     '   <div class="popover-arrow"></div>' +
-            //     '   <div class="popover-inner"></div>' +
-            //     '</div>'
+            customClass: 'user-profile-photo-popover'
         });
     }
 

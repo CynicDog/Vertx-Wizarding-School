@@ -2,3 +2,10 @@
 .user-photo-popover.popover-body {
     background-color: #3498db;
 }*/
+
+.user-profile-photo-popover {
+    height: 40px
+}
+.popover-body {
+    padding: .5rem
+}
