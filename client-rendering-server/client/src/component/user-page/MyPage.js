@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import Image from "image-js";
-import { Popover } from "bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap styles
+import Image from 'image-js';
+import { Popover } from 'bootstrap';
 import './MyPage.css'; // Import your custom CSS file
 
 class MyPage extends Component {
@@ -10,15 +9,68 @@ class MyPage extends Component {
 
         this.state = {
             username: '',
-            userImageSrc: ''
+            userImageSrc: '',
         };
     }
 
     componentDidMount() {
         const username = new URLSearchParams(window.location.search).get('username');
         this.setState({ username });
+
+        // Fetch user profile photo from server based on the username
+        fetch(`http://localhost:4000/api/v1/user/profile`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user photo');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                // Assuming the server returns the photo as base64 data
+                this.setState({ userImageSrc: data.profilePhoto });
+            })
+            .catch((error) => {
+                console.error('Error fetching user photo', error);
+            });
+
         this.initPopover();
     }
+
+    initPopover() {
+        // Add a general click event listener to the body for event delegation
+        document.body.addEventListener('click', (event) => {
+            const cameraIcon = document.getElementById('camera-icon');
+
+            // Check if the clicked element is the camera icon
+            if (event.target === cameraIcon) {
+                this.handleImageClick();
+            }
+        });
+
+        const popoverContent = `
+            <a class="link-secondary icon-link icon-link-hover mx-1">
+                <p class="bi bi-camera-fill" id="camera-icon"></p>
+            </a> /
+            <!--TODO: Status registration / propagation -->
+            <a class="link-secondary icon-link icon-link-hover mx-1">
+                <p class="bi bi-chat-dots-fill" id="status-icon"></p>
+            </a>
+        `;
+
+        const imagePopover = new Popover(this.userImage, {
+            content: popoverContent,
+            placement: 'right',
+            trigger: 'click',
+            html: true,
+            customClass: 'user-profile-photo-popover',
+        });
+    }
+
 
     handleImageClick = () => {
         this.fileInput.click();
@@ -35,10 +87,12 @@ class MyPage extends Component {
             const reader = new FileReader();
 
             reader.onload = async (e) => {
-
                 // Resize the image using image-js
                 const image = await Image.load(e.target.result);
-                const resizedImage = image.resize({ preserveAspectRatio: true, width: 100 }); // Adjust the dimensions as needed
+                const resizedImage = image.resize({
+                    preserveAspectRatio: true,
+                    width: 100,
+                }); // Adjust the dimensions as needed
 
                 // Convert the resized image back to base64
                 const base64Data = resizedImage.toDataURL();
@@ -46,14 +100,13 @@ class MyPage extends Component {
                 // Send the resized file to the server using fetch
                 fetch(`http://localhost:4000/api/v1/user/photo`, {
                     method: 'POST',
-                    body: JSON.stringify({ 'base64Data': base64Data }),
+                    body: JSON.stringify({ base64Data }),
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${sessionStorage.getItem('jwt')}`
+                        Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
                     },
                 })
-                    .then(response => {
-                        // TODO: implementation on retry
+                    .then((response) => {
                         // Handle the response from the server
                         if (!response.ok) {
                             throw new Error('Failed to upload photo');
@@ -62,10 +115,10 @@ class MyPage extends Component {
                         this.setState({ userImageSrc: base64Data });
                         return response.text(); // You can parse the response if it's JSON
                     })
-                    .then(message => {
+                    .then((message) => {
                         console.log(message);
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         console.error('Error uploading photo', error);
                     });
             };
@@ -73,15 +126,6 @@ class MyPage extends Component {
             reader.readAsDataURL(selectedFile);
         }
     };
-
-    initPopover() {
-        const imagePopover = new Popover(this.userImage, {
-            content: "This is a popover!",
-            placement: 'right',
-            trigger: 'hover',
-            customClass: 'user-profile-photo-popover'
-        });
-    }
 
     render() {
         const { username, userImageSrc } = this.state;
@@ -91,7 +135,7 @@ class MyPage extends Component {
                     type="button"
                     className="rounded-circle shadow-sm object-fit-cover mx-1"
                     style={{ width: '35px', height: '35px' }}
-                    onClick={this.handleImageClick}
+                    // onClick={this.handleImageClick}
                     src={userImageSrc}
                     alt={`${username}'s profile`}
                     ref={(img) => (this.userImage = img)}
