@@ -14,15 +14,14 @@ public class UserHandler {
     public static void fetchUser(RoutingContext ctx, MongoClient mongoClient) {
         String username = ctx.request().getParam("username");
 
-        JsonObject query = new JsonObject()
-                .put("username", username);
-
+        JsonObject query = new JsonObject().put("username", username);
         JsonObject fields = new JsonObject()
                 .put("_id", 0)
                 .put("username", 1)
                 .put("emailAddress", 1)
                 .put("type", 1)
                 .put("createdAt", 1)
+                .put("profilePhoto", 1)
 //                .put("house", 1)
 //                .put("wand", 1)
 //                .put("patronus", 1)
@@ -34,7 +33,7 @@ public class UserHandler {
                 .toSingle()
                 .subscribe(
                         json -> {
-                            logger.info("Found user of {}", json.toString());
+                            logger.info("Found user with the name of {}", json.getString("username"));
                             ctx.response().putHeader("Content-Type", "application/json").end(json.encode());
                         },
                         err -> {
