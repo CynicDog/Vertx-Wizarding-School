@@ -16,8 +16,7 @@ import org.slf4j.LoggerFactory;
 import static org.example.config.RouterConfig.allowedHeaders;
 import static org.example.config.RouterConfig.allowedMethods;
 import static org.example.handler.AccountHandler.*;
-import static org.example.handler.UserHandler.fetchUser;
-import static org.example.handler.UserHandler.postUserProfilePhoto;
+import static org.example.handler.UserHandler.*;
 
 public class PublicApiServerVerticle extends AbstractVerticle {
 
