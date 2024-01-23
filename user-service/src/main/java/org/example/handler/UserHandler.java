@@ -45,7 +45,7 @@ public class UserHandler {
 
     public static void postProfilePhoto(RoutingContext ctx, MongoClient mongoClient) {
         JsonObject query = new JsonObject().put("username", ctx.request().getParam("username"));
-        JsonObject photoData = new JsonObject().put("$set", new JsonObject().put("profilePhoto", ctx.getBodyAsJson()));
+        JsonObject photoData = new JsonObject().put("$set", new JsonObject().put("profilePhoto", ctx.getBodyAsJson().getString("base64Data")));
 
         mongoClient.rxFindOneAndUpdate("user", query, photoData)
                 .ignoreElement()
