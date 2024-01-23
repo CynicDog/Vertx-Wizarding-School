@@ -6,14 +6,14 @@ import { Home } from "./component/Home";
 import { SingupEntry } from "./component/signup/Singup-entry";
 import { SignupStudent } from "./component/signup/Signup-student";
 import { SignupTeacher } from "./component/signup/Signup-teacher";
-import { Login } from "./component/Login/Login";
+import { Login } from "./component/login/Login";
 
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle'
 import Course from "./component/course/Course";
 import House from "./component/house/House";
-import MyPage from "./component/userpage/MyPage";
+import MyPage from "./component/user-page/MyPage";
 
 export default class App extends Component {
     render() {
