@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Image from 'image-js';
 import { Popover } from 'bootstrap';
-import './MyPage.css'; // Import your custom CSS file
+import './MyPage.css';
+import StatusToast from "../toast/StatusToast"; // Import your custom CSS file
 
 class MyPage extends Component {
     constructor(props) {
@@ -10,6 +11,8 @@ class MyPage extends Component {
         this.state = {
             username: '',
             userImageSrc: '',
+            showStatusToast: false,
+            toastPosition: { top: 0,  left: 0 }
         };
     }
 
@@ -45,10 +48,13 @@ class MyPage extends Component {
         // Add a general click event listener to the body for event delegation
         document.body.addEventListener('click', (event) => {
             const cameraIcon = document.getElementById('camera-icon');
+            const statusIcon = document.getElementById('status-icon');
 
-            // Check if the clicked element is the camera icon
             if (event.target === cameraIcon) {
                 this.handleImageClick();
+            }
+            if (event.target === statusIcon) {
+                this.handleStatusClick(statusIcon);
             }
         });
 
@@ -70,10 +76,20 @@ class MyPage extends Component {
         });
     }
 
-
     handleImageClick = () => {
         this.fileInput.click();
     };
+
+    handleStatusClick = (statusIcon) => {
+        if (statusIcon) {
+            const rect = statusIcon.getBoundingClientRect();
+
+            this.setState((prevState) => ({
+                showStatusToast: !prevState.showStatusToast,
+                toastPosition: { top: rect.top - 12, left: rect.left + 30 }
+            }));
+        }
+    }
 
     handleFileSelect = async (event) => {
         const fileInput = event.target;
@@ -127,7 +143,7 @@ class MyPage extends Component {
     };
 
     render() {
-        const { username, userImageSrc } = this.state;
+        const { username, userImageSrc, showStatusToast, toastPosition } = this.state;
         return (
             <div>
                 <div className="user-profile-photo-wrapper">
@@ -151,6 +167,9 @@ class MyPage extends Component {
                     ref={(input) => (this.fileInput = input)}
                 />
                 <div>This is {username}'s personal page</div>
+                <div className="toast-container" style={{ top: `${toastPosition.top}px`, left: `${toastPosition.left}px` }}>
+                    {showStatusToast && <StatusToast status={"Busy"} />}
+                </div>
             </div>
         );
     }
