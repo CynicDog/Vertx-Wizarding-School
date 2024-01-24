@@ -6,6 +6,24 @@
 .user-profile-photo-popover {
     height: 40px
 }
+.user-profile-photo-wrapper {
+    position: relative;
+    display: inline-block;
+}
+.user-status {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 13px;
+    height: 13px;
+
+    border-radius: 50%;
+    border: 2px solid white;
+}
+.user-status.not-available {
+    background-color: red;
+}
+
 .popover-body {
     padding: .5rem
 }

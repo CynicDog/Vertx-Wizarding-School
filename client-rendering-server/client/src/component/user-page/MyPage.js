@@ -56,7 +56,6 @@ class MyPage extends Component {
             <a class="link-secondary icon-link icon-link-hover mx-1">
                 <p class="bi bi-camera-fill" id="camera-icon"></p>
             </a> /
-            <!--TODO: Status registration / propagation -->
             <a class="link-secondary icon-link icon-link-hover mx-1">
                 <p class="bi bi-chat-dots-fill" id="status-icon"></p>
             </a>
@@ -131,16 +130,18 @@ class MyPage extends Component {
         const { username, userImageSrc } = this.state;
         return (
             <div>
-                <img
-                    type="button"
-                    className="rounded-circle shadow-sm object-fit-cover mx-1"
-                    style={{ width: '35px', height: '35px' }}
-                    // onClick={this.handleImageClick}
-                    src={userImageSrc}
-                    alt={`${username}'s profile`}
-                    ref={(img) => (this.userImage = img)}
-                    data-bs-toggle="popover"
-                />
+                <div className="user-profile-photo-wrapper">
+                    <img
+                        type="button"
+                        className="rounded-circle shadow-sm object-fit-cover position-relative mx-1"
+                        style={{ width: '35px', height: '35px' }}
+                        src={userImageSrc}
+                        alt={`${username}'s profile`}
+                        ref={(img) => (this.userImage = img)}
+                        data-bs-toggle="popover"
+                    />
+                    <div className="user-status not-available"></div>
+                </div>
                 <input
                     type="file"
                     id="fileInput"
