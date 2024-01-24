@@ -1,8 +1,9 @@
+import './MyPage.css';
 import React, { Component } from 'react';
+import EventBus from 'vertx3-eventbus-client';
 import Image from 'image-js';
 import { Popover } from 'bootstrap';
-import './MyPage.css';
-import PresenceToast from "../toast/PresenceToast"; // Import your custom CSS file
+import PresenceToast from "../toast/PresenceToast";
 
 class MyPage extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ class MyPage extends Component {
         const username = new URLSearchParams(window.location.search).get('username');
         this.setState({ username });
 
-        // TODO: Retry implementation
+        // TODO: Error handling
         // Fetch user profile photo from server based on the username
         fetch(`http://localhost:4000/api/v1/user/profile`, {
             method: 'GET',
@@ -44,6 +45,15 @@ class MyPage extends Component {
             });
 
         this.initPopover();
+
+        const eventBus= new EventBus("http://localhost:8080/eventbus");
+        eventBus.enableReconnect(true);
+
+        eventBus.onopen = () => {
+            eventBus.registerHandler("client.updates.user.presence", (err, message) => {
+                console.log(message.body)
+            });
+        }
     }
 
     initPopover() {
@@ -53,10 +63,10 @@ class MyPage extends Component {
             const presenceIcon = document.getElementById('presence-icon');
 
             if (event.target === cameraIcon) {
-                this.handleImageClick();
+                this.handleImageIconClick();
             }
             if (event.target === presenceIcon) {
-                this.handlePresenceClick(presenceIcon);
+                this.handlePresenceIconClick(presenceIcon);
             }
         });
 
@@ -78,17 +88,17 @@ class MyPage extends Component {
         });
     }
 
-    handleImageClick = () => {
+    handleImageIconClick = () => {
         this.fileInput.click();
     };
 
-    handlePresenceClick = (presenceIcon) => {
+    handlePresenceIconClick = (presenceIcon) => {
         if (presenceIcon) {
             const rect = presenceIcon.getBoundingClientRect();
 
             this.setState((prevState) => ({
                 showPresenceToast: !prevState.showPresenceToast,
-                toastPosition: { top: rect.top - 12, left: rect.left + 30 }
+                toastPosition: { top: rect.top - 10, left: rect.left + 30 }
             }));
         }
     }
@@ -114,7 +124,7 @@ class MyPage extends Component {
                 // Convert the resized image back to base64
                 const base64Data = resizedImage.toDataURL();
 
-                // TODO: Retry implementation
+                // TODO: Error handling
                 // Send the resized file to the server using fetch
                 fetch(`http://localhost:4000/api/v1/user/photo`, {
                     method: 'POST',
@@ -146,30 +156,34 @@ class MyPage extends Component {
     };
 
     handlePresenceChange = (newPresence) => {
-        this.setState({ presence: newPresence });
 
-        // TODO: Retry implementation
-        fetch(`http://localhost:4000/api/v1/user/presence`, {
-            method : 'POST',
-            body: JSON.stringify({ newPresence }),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${sessionStorage.getItem('jwt')}`
-            }
-        })
-            .then((response) => {
-                // Handle the response from the server
-                if (!response.ok) {
-                    throw new Error('Failed to update presence.');
+        if (newPresence !== this.state.presence) {
+            this.setState({ presence: newPresence });
+            const {username} = this.state;
+
+            // TODO: Error handling
+            fetch(`/user/presence`, { // TODO: migrate to public-api-server -> user-service
+                method : 'POST',
+                body: JSON.stringify({ username, newPresence }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${sessionStorage.getItem('jwt')}`
                 }
-                return response.text();
             })
-            .then((message) => {
-                console.log(message);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+                .then((response) => {
+                    // Handle the response from the server
+                    if (!response.ok) {
+                        throw new Error('Failed to update presence.');
+                    }
+                    return response.text();
+                })
+                .then((message) => {
+                    // console.log("a." + message);
+                })
+                .catch((error) => {
+                    // console.error("b." + error);
+                });
+        }
     };
 
     render() {
