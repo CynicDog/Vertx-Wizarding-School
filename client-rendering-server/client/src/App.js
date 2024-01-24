@@ -3,9 +3,7 @@ import { Layout } from './layout/Layout';
 import { Component } from "react";
 import { Users } from "./component/Users";
 import { Home } from "./component/Home";
-import { SingupEntry } from "./component/signup/Singup-entry";
-import { SignupStudent } from "./component/signup/Signup-student";
-import { SignupTeacher } from "./component/signup/Signup-teacher";
+import { SingupEntry } from "./component/signup/SingupEntry";
 import { Login } from "./component/login/Login";
 
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -14,6 +12,7 @@ import 'bootstrap/dist/js/bootstrap.bundle'
 import Course from "./component/course/Course";
 import House from "./component/house/House";
 import MyPage from "./component/user-page/MyPage";
+import {SignupForm} from "./component/signup/SignupForm";
 
 export default class App extends Component {
     render() {
@@ -40,9 +39,9 @@ const SignupRouter = () => {
     const { type } = useParams();
 
     if (type === 'student') {
-        return <SignupStudent type={type} />;
+        return <SignupForm type={type} />;
     } else if (type === 'teacher') {
-        return <SignupTeacher type={type} />;
+        return <SignupForm type={type} />;
     } else {
         return <div>Invalid sign-up type</div>;
     }
