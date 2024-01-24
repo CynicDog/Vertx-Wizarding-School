@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Toast } from 'bootstrap';
 
-const StatusToast = ({ status, onUpdateStatus }) => {
+const PresenceToast = ({ presence, onUpdatePresence }) => {
     const toastRef = useRef(null);
 
     useEffect(() => {
@@ -11,15 +11,15 @@ const StatusToast = ({ status, onUpdateStatus }) => {
 
     const getStatusStyle = (statusType) => {
 
-        if (status === statusType && statusType === 'busy') {
+        if (presence === statusType && statusType === 'busy') {
             return 'text-danger-emphasis bg-danger-subtle'
-        } else if (status === statusType && statusType === 'available') {
+        } else if (presence === statusType && statusType === 'available') {
             return 'text-primary-emphasis bg-primary-subtle'
-        } else if (status === statusType && statusType === 'away') {
+        } else if (presence === statusType && statusType === 'away') {
             return 'text-success-emphasis bg-success-subtle'
-        } else if (status === statusType && statusType === 'on-call') {
+        } else if (presence === statusType && statusType === 'on-call') {
             return 'text-warning-emphasis bg-warning-subtle'
-        } else if (status === statusType && statusType === 'offline') {
+        } else if (presence === statusType && statusType === 'offline') {
             return 'text-dark-emphasis bg-dark-subtle'
         } else {
             return 'text-bg-light fw-light'
@@ -36,27 +36,27 @@ const StatusToast = ({ status, onUpdateStatus }) => {
                     <div>
                         <span
                             className={`btn badge rounded-pill border-primary ${getStatusStyle('available')}`}
-                            onClick={() => onUpdateStatus('available')}>
+                            onClick={() => onUpdatePresence('available')}>
                             Available
                         </span>
                         <span
                             className={`btn badge rounded-pill border-success ${getStatusStyle('away')} mx-1`}
-                            onClick={() => onUpdateStatus('away')}>
+                            onClick={() => onUpdatePresence('away')}>
                             Away
                         </span>
                         <span
                             className={`btn badge rounded-pill border-warning ${getStatusStyle('on-call')}`}
-                            onClick={() => onUpdateStatus('on-call')}>
+                            onClick={() => onUpdatePresence('on-call')}>
                             On Call
                         </span>
                         <span
                             className={`btn badge rounded-pill border-danger ${getStatusStyle('busy')} me-1`}
-                            onClick={() => onUpdateStatus('busy')}>
+                            onClick={() => onUpdatePresence('busy')}>
                             Busy
                         </span>
                         <span
                             className={`btn badge rounded-pill border-dark ${getStatusStyle('offline')}`}
-                            onClick={() => onUpdateStatus('offline')}>
+                            onClick={() => onUpdatePresence('offline')}>
                             Offline
                         </span>
                     </div>
@@ -66,4 +66,4 @@ const StatusToast = ({ status, onUpdateStatus }) => {
     );
 };
 
-export default StatusToast;
+export default PresenceToast;

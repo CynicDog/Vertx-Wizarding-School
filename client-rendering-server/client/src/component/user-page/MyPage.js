@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Image from 'image-js';
 import { Popover } from 'bootstrap';
 import './MyPage.css';
-import StatusToast from "../toast/StatusToast"; // Import your custom CSS file
+import PresenceToast from "../toast/PresenceToast"; // Import your custom CSS file
 
 class MyPage extends Component {
     constructor(props) {
@@ -11,9 +11,9 @@ class MyPage extends Component {
         this.state = {
             username: '',
             userImageSrc: '',
-            showStatusToast: false,
+            showPresenceToast: false,
             toastPosition: { top: 0,  left: 0 },
-            status: 'available'
+            presence: 'available'
         };
     }
 
@@ -21,6 +21,7 @@ class MyPage extends Component {
         const username = new URLSearchParams(window.location.search).get('username');
         this.setState({ username });
 
+        // TODO: Retry implementation
         // Fetch user profile photo from server based on the username
         fetch(`http://localhost:4000/api/v1/user/profile`, {
             method: 'GET',
@@ -49,13 +50,13 @@ class MyPage extends Component {
         // Add a general click event listener to the body for event delegation
         document.body.addEventListener('click', (event) => {
             const cameraIcon = document.getElementById('camera-icon');
-            const statusIcon = document.getElementById('status-icon');
+            const presenceIcon = document.getElementById('presence-icon');
 
             if (event.target === cameraIcon) {
                 this.handleImageClick();
             }
-            if (event.target === statusIcon) {
-                this.handleStatusClick(statusIcon);
+            if (event.target === presenceIcon) {
+                this.handlePresenceClick(presenceIcon);
             }
         });
 
@@ -64,7 +65,7 @@ class MyPage extends Component {
                 <p class="bi bi-camera-fill" id="camera-icon"></p>
             </a> /
             <a class="link-secondary icon-link icon-link-hover mx-1">
-                <p class="bi bi-chat-dots-fill" id="status-icon"></p>
+                <p class="bi bi-chat-dots-fill" id="presence-icon"></p>
             </a>
         `;
 
@@ -81,12 +82,12 @@ class MyPage extends Component {
         this.fileInput.click();
     };
 
-    handleStatusClick = (statusIcon) => {
-        if (statusIcon) {
-            const rect = statusIcon.getBoundingClientRect();
+    handlePresenceClick = (presenceIcon) => {
+        if (presenceIcon) {
+            const rect = presenceIcon.getBoundingClientRect();
 
             this.setState((prevState) => ({
-                showStatusToast: !prevState.showStatusToast,
+                showPresenceToast: !prevState.showPresenceToast,
                 toastPosition: { top: rect.top - 12, left: rect.left + 30 }
             }));
         }
@@ -113,6 +114,7 @@ class MyPage extends Component {
                 // Convert the resized image back to base64
                 const base64Data = resizedImage.toDataURL();
 
+                // TODO: Retry implementation
                 // Send the resized file to the server using fetch
                 fetch(`http://localhost:4000/api/v1/user/photo`, {
                     method: 'POST',
@@ -129,13 +131,13 @@ class MyPage extends Component {
                         }
                         // Let uploaded image appear on page
                         this.setState({ userImageSrc: base64Data });
-                        return response.text(); // You can parse the response if it's JSON
+                        return response.text();
                     })
                     .then((message) => {
                         console.log(message);
                     })
                     .catch((error) => {
-                        console.error('Error uploading photo', error);
+                        console.error(error);
                     });
             };
 
@@ -143,12 +145,35 @@ class MyPage extends Component {
         }
     };
 
-    updateStatus = (newStatus) => {
-        this.setState({ status: newStatus });
+    handlePresenceChange = (newPresence) => {
+        this.setState({ presence: newPresence });
+
+        // TODO: Retry implementation
+        fetch(`http://localhost:4000/api/v1/user/presence`, {
+            method : 'POST',
+            body: JSON.stringify({ newPresence }),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${sessionStorage.getItem('jwt')}`
+            }
+        })
+            .then((response) => {
+                // Handle the response from the server
+                if (!response.ok) {
+                    throw new Error('Failed to update presence.');
+                }
+                return response.text();
+            })
+            .then((message) => {
+                console.log(message);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
     render() {
-        const { username, userImageSrc, showStatusToast, toastPosition, status } = this.state;
+        const { username, userImageSrc, showPresenceToast, toastPosition, presence } = this.state;
         return (
             <div>
                 <div className="user-profile-photo-wrapper">
@@ -161,7 +186,7 @@ class MyPage extends Component {
                         ref={(img) => (this.userImage = img)}
                         data-bs-toggle="popover"
                     />
-                    <div className={`user-status ${status}`}></div>
+                    <div className={`user-presence ${presence}`}></div>
                 </div>
                 <input
                     type="file"
@@ -175,7 +200,7 @@ class MyPage extends Component {
                 <div
                     className="toast-container"
                     style={{ top: `${toastPosition.top}px`, left: `${toastPosition.left}px` }}>
-                    {showStatusToast && <StatusToast status={status} onUpdateStatus={this.updateStatus} />}
+                    {showPresenceToast && <PresenceToast presence={presence} onUpdatePresence={this.handlePresenceChange} />}
                 </div>
             </div>
         );

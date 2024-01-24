@@ -10,7 +10,7 @@
     position: relative;
     display: inline-block;
 }
-.user-status {
+.user-presence {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -20,23 +20,23 @@
     border-radius: 50%;
     border: 2px solid white;
 }
-.user-status.available {
+.user-presence.available {
     background-color: #64b5f6; /* Light Blue */
 }
 
-.user-status.away {
+.user-presence.away {
     background-color: #81c784; /* Light Green */
 }
 
-.user-status.on-call {
+.user-presence.on-call {
     background-color: #ffd54f; /* Amber */
 }
 
-.user-status.busy {
+.user-presence.busy {
     background-color: #ef5350; /* Light Red */
 }
 
-.user-status.offline {
+.user-presence.offline {
     background-color: #a0a0a0; /* Light Gray */
 }
 
