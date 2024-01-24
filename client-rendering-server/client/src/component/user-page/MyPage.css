@@ -20,8 +20,24 @@
     border-radius: 50%;
     border: 2px solid white;
 }
-.user-status.not-available {
-    background-color: red;
+.user-status.available {
+    background-color: #64b5f6; /* Light Blue */
+}
+
+.user-status.away {
+    background-color: #81c784; /* Light Green */
+}
+
+.user-status.on-call {
+    background-color: #ffd54f; /* Amber */
+}
+
+.user-status.busy {
+    background-color: #ef5350; /* Light Red */
+}
+
+.user-status.offline {
+    background-color: #a0a0a0; /* Light Gray */
 }
 
 .popover-body {

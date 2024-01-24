@@ -12,7 +12,8 @@ class MyPage extends Component {
             username: '',
             userImageSrc: '',
             showStatusToast: false,
-            toastPosition: { top: 0,  left: 0 }
+            toastPosition: { top: 0,  left: 0 },
+            status: 'available'
         };
     }
 
@@ -142,8 +143,12 @@ class MyPage extends Component {
         }
     };
 
+    updateStatus = (newStatus) => {
+        this.setState({ status: newStatus });
+    };
+
     render() {
-        const { username, userImageSrc, showStatusToast, toastPosition } = this.state;
+        const { username, userImageSrc, showStatusToast, toastPosition, status } = this.state;
         return (
             <div>
                 <div className="user-profile-photo-wrapper">
@@ -156,7 +161,7 @@ class MyPage extends Component {
                         ref={(img) => (this.userImage = img)}
                         data-bs-toggle="popover"
                     />
-                    <div className="user-status not-available"></div>
+                    <div className={`user-status ${status}`}></div>
                 </div>
                 <input
                     type="file"
@@ -167,8 +172,10 @@ class MyPage extends Component {
                     ref={(input) => (this.fileInput = input)}
                 />
                 <div>This is {username}'s personal page</div>
-                <div className="toast-container" style={{ top: `${toastPosition.top}px`, left: `${toastPosition.left}px` }}>
-                    {showStatusToast && <StatusToast status={"Busy"} />}
+                <div
+                    className="toast-container"
+                    style={{ top: `${toastPosition.top}px`, left: `${toastPosition.left}px` }}>
+                    {showStatusToast && <StatusToast status={status} onUpdateStatus={this.updateStatus} />}
                 </div>
             </div>
         );
