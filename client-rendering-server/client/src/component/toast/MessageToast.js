@@ -6,6 +6,7 @@ const MessageToast = ({ message }) => {
     // to store a reference to the div element that represents the toast
     const toastRef = useRef(null);
 
+    // to create mutable object references that persist across renders in a functional component
     useEffect(() => {
         const messagingToast = new Toast(toastRef.current);
         const toastBody = messagingToast._element.querySelector('.toast-body');
