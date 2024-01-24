@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { Toast } from "bootstrap";
+import MessageToast from "../toast/MessageToast";
 
 export class Login extends Component {
 
@@ -12,7 +12,7 @@ export class Login extends Component {
         this.state = {
             username: "", password: "", validationStatus: {
                 username: null, password: null
-            }, usernameMessage: "", passwordMessage: "", loginProcessing: false
+            }, usernameMessage: "", passwordMessage: "", loginProcessing: false, toastMessage: ""
         };
     }
 
@@ -65,13 +65,8 @@ export class Login extends Component {
         });
     };
 
-    showMessagingToast = (message) => {
-        const messagingToast = new Toast(document.getElementById('messagingToast'));
-
-        const toastBody = messagingToast._element.querySelector('.toast-body');
-        toastBody.textContent = message;
-
-        messagingToast.show();
+    setMessagingToast = (message) => {
+        this.setState({ toastMessage: message })
     }
 
     handleLoginClick = () => {
@@ -103,7 +98,7 @@ export class Login extends Component {
                             validationStatus: {username: null, password: null}
                         }));
 
-                        this.showMessagingToast(errorMessage);
+                        this.setMessagingToast(errorMessage);
                     });
                 } else if (response.status === 500) { // when api-server(4000) is up but user-service(3000) is down
                     throw new Error();
@@ -120,7 +115,7 @@ export class Login extends Component {
                         loginProcessing: false,
                         validationStatus: {username: null, password: null}
                     }));
-                    this.showMessagingToast('Login failed. Try again later please.');
+                    this.setMessagingToast('Login failed. Try again later please.');
                 }
             });
         }
@@ -128,7 +123,7 @@ export class Login extends Component {
     }
 
     render() {
-        const {username, password, loginProcessing, validationStatus, usernameMessage, passwordMessage} = this.state;
+        const {username, password, loginProcessing, validationStatus, usernameMessage, passwordMessage, toastMessage} = this.state;
         return (<div>
             <div className="row my-5 justify-content-center align-items-center">
                 <div className="col-6 my-5">
@@ -178,16 +173,7 @@ export class Login extends Component {
                     </div>
                 </div>
                 <div className="toast-container position-fixed bottom-0 end-0 p-4">
-                    <div id="messagingToast" className="toast align-items-center text-bg-danger border-0"
-                         role="alert"
-                         aria-live="assertive" aria-atomic="true">
-                        <div className="d-flex">
-                            <div className="toast-body">
-                            </div>
-                            <button type="button" className="btn-close btn-close-white me-2 m-auto"
-                                    data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                    </div>
+                    {toastMessage && <MessageToast message={toastMessage} />}
                 </div>
             </div>
         </div>);
