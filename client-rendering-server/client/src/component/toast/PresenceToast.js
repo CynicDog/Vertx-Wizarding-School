@@ -27,13 +27,13 @@ const PresenceToast = ({ presence, onUpdatePresence }) => {
     };
 
     return (
-        <div className="toast align-items-center border-1" style={{ height: '120px', width: '200px' }} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
-            <div className="d-flex">
+        <div className="toast align-items-center border-1" style={{ height: '400px', width: '300px', overflowY: 'auto' }} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
+            <div className="">
                 <div className="toast-body">
                     <div className="my-1 pb-2">
                         <span className="fw-light">Currently I am ... </span> <br />
                     </div>
-                    <div>
+                    <div className="mx-1">
                         <span
                             className={`btn badge rounded-pill border-primary ${getStatusStyle('available')}`}
                             onClick={() => onUpdatePresence('available')}>
@@ -50,7 +50,7 @@ const PresenceToast = ({ presence, onUpdatePresence }) => {
                             On Call
                         </span>
                         <span
-                            className={`btn badge rounded-pill border-danger ${getStatusStyle('busy')} me-1`}
+                            className={`btn badge rounded-pill border-danger ${getStatusStyle('busy')} mx-1`}
                             onClick={() => onUpdatePresence('busy')}>
                             Busy
                         </span>
@@ -59,6 +59,9 @@ const PresenceToast = ({ presence, onUpdatePresence }) => {
                             onClick={() => onUpdatePresence('offline')}>
                             Offline
                         </span>
+                    </div>
+                    <div className="my-1 pb-2">
+                        <span className="fw-light">Currently I am ... </span> <br />
                     </div>
                 </div>
             </div>

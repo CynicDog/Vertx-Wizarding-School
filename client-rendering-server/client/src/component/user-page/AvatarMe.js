@@ -71,7 +71,7 @@ class AvatarMe extends Component {
     initPopover() {
         const popoverContent = `
             <a class="link-secondary icon-link icon-link-hover mx-1">
-                <p class="bi bi-chat-dots-fill" id=""></p>
+                <p class="bi bi-chat-dots-fill" id="presence-icon"></p>
             </a> / 
             <a class="link-secondary icon-link icon-link-hover mx-1">
                 <p class="bi bi-camera-fill" id="camera-icon"></p>
@@ -97,7 +97,7 @@ class AvatarMe extends Component {
 
             this.setState((prevState) => ({
                 showPresenceToast: !prevState.showPresenceToast,
-                toastPosition: { top: rect.top , left: rect.left - 230 }
+                toastPosition: { top: rect.top - 9, left: rect.left - 320 }
             }));
         }
     }
@@ -199,7 +199,7 @@ class AvatarMe extends Component {
                         ref={(img) => (this.userImage = img)}
                         data-bs-toggle="popover"
                     />
-                    <div type="button" className={`user-presence ${presence}`} id="presence-icon"></div>
+                    <div type="button" className={`user-presence ${presence}`}></div>
                     <div type="button" className="user-notification" id="notification-mark">99+</div>
                 </div>
                 <input
