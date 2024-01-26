@@ -11,8 +11,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle'
 import Course from "./component/course/Course";
 import House from "./component/house/House";
-import MyPage from "./component/user-page/MyPage";
 import {SignupForm} from "./component/signup/SignupForm";
+import {MyPage} from "./component/user-page/MyPage";
 
 export default class App extends Component {
     render() {

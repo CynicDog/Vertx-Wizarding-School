@@ -1,8 +1,6 @@
-/*
-.user-photo-popover.popover-body {
-    background-color: #3498db;
-}*/
-
+.popover-body {
+    padding: 8px !important;
+}
 .user-profile-photo-popover {
     height: 40px
 }
@@ -38,8 +36,4 @@
 
 .user-presence.offline {
     background-color: #a0a0a0; /* Light Gray */
-}
-
-.popover-body {
-    padding: .5rem
 }
