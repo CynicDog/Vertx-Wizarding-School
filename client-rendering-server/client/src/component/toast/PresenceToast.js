@@ -6,7 +6,9 @@ const PresenceToast = ({ presence, onUpdatePresence, messages }) => {
     const toastRef = useRef(null);
 
     useEffect(() => {
-        const messagingToast = new Toast(toastRef.current);
+        const messagingToast = new Toast(toastRef.current, {
+            autohide: false
+        });
 
         if (!messagingToast.isShown()) {
             messagingToast.show();
@@ -75,10 +77,14 @@ const PresenceToast = ({ presence, onUpdatePresence, messages }) => {
                                 <div key={index}
                                      className="border rounded d-flex justify-content-between align-items-start p-2 my-2">
                                     <div className="ms-2 me-auto overflow-x-auto">
-                                        <div className="fw-bold">{message.publisher}</div>
-                                        {message.newPresence}
+                                        <div className="">
+                                            {message.publisher}
+                                        </div>
+                                        <div className="fw-lighter">
+                                            {message.newPresence}
+                                        </div>
                                     </div>
-                                    <span className="badge bg-success-subtle rounded-pill">{message.timestamp}</span>
+                                    <span className="badge bg-success-subtle rounded-pill">{message.at}</span>
                                 </div>
                             ))}
                         </div>
