@@ -19,7 +19,7 @@ class AvatarMe extends Component {
     }
 
     componentDidMount() {
-        const username = new URLSearchParams(window.location.search).get('username');
+        const username = sessionStorage.getItem('username');
         this.setState({ username });
 
         // TODO: Error handling
@@ -46,18 +46,6 @@ class AvatarMe extends Component {
 
         this.initPopover();
 
-        const eventBus= new EventBus("http://localhost:8080/eventbus");
-        eventBus.enableReconnect(true);
-
-        eventBus.onopen = () => {
-            eventBus.registerHandler("client.updates.user.presence", (err, message) => {
-                console.log(message.body)
-            });
-        }
-    }
-
-    initPopover() {
-        // Add a general click event listener to the body for event delegation
         document.body.addEventListener('click', (event) => {
             const cameraIcon = document.getElementById('camera-icon');
             const presenceIcon = document.getElementById('presence-icon');
@@ -70,9 +58,20 @@ class AvatarMe extends Component {
             }
         });
 
+        const eventBus= new EventBus("http://localhost:8080/eventbus");
+        eventBus.enableReconnect(true);
+
+        eventBus.onopen = () => {
+            eventBus.registerHandler("client.updates.user.presence", (err, message) => {
+                console.log(message.body)
+            });
+        }
+    }
+
+    initPopover() {
         const popoverContent = `
             <a class="link-secondary icon-link icon-link-hover mx-1">
-                <p class="bi bi-chat-dots-fill" id="presence-icon"></p>
+                <p class="bi bi-chat-dots-fill" id=""></p>
             </a> / 
             <a class="link-secondary icon-link icon-link-hover mx-1">
                 <p class="bi bi-camera-fill" id="camera-icon"></p>
@@ -98,7 +97,7 @@ class AvatarMe extends Component {
 
             this.setState((prevState) => ({
                 showPresenceToast: !prevState.showPresenceToast,
-                toastPosition: { top: rect.top - 10, left: rect.left - 220 }
+                toastPosition: { top: rect.top , left: rect.left - 230 }
             }));
         }
     }
@@ -193,14 +192,15 @@ class AvatarMe extends Component {
                 <div className="user-profile-photo-wrapper">
                     <img
                         type="button"
-                        className="rounded-circle shadow-sm object-fit-cover position-relative mx-1"
+                        className="rounded-circle object-fit-cover position-relative mx-1"
                         style={{ width: '35px', height: '35px' }}
                         src={userImageSrc}
                         alt={`${username}'s profile`}
                         ref={(img) => (this.userImage = img)}
                         data-bs-toggle="popover"
                     />
-                    <div className={`user-presence ${presence}`}></div>
+                    <div type="button" className={`user-presence ${presence}`} id="presence-icon"></div>
+                    <div type="button" className="user-notification" id="notification-mark">99+</div>
                 </div>
                 <input
                     type="file"
