@@ -14,7 +14,8 @@ class AvatarMe extends Component {
             userImageSrc: '',
             showPresenceToast: false,
             toastPosition: { top: 0,  left: 0 },
-            presence: 'available'
+            presence: 'available',
+            messages: []
         };
     }
 
@@ -63,7 +64,13 @@ class AvatarMe extends Component {
 
         eventBus.onopen = () => {
             eventBus.registerHandler("client.updates.user.presence", (err, message) => {
-                console.log(message.body)
+                const newMessage = message.body;
+                console.log(message);
+
+                // Update the state by appending the new message
+                this.setState((prevState) => ({
+                    messages: [...prevState.messages, newMessage],
+                }));
             });
         }
     }
@@ -99,6 +106,10 @@ class AvatarMe extends Component {
                 showPresenceToast: !prevState.showPresenceToast,
                 toastPosition: { top: rect.top - 9, left: rect.left - 320 }
             }));
+        }
+
+        if (this.state.showPresenceToast) {
+            this.setState({messages: []})
         }
     }
 
@@ -186,7 +197,7 @@ class AvatarMe extends Component {
     };
 
     render() {
-        const { username, userImageSrc, showPresenceToast, toastPosition, presence } = this.state;
+        const { username, userImageSrc, showPresenceToast, toastPosition, presence, messages } = this.state;
         return (
             <div>
                 <div className="user-profile-photo-wrapper">
@@ -200,7 +211,9 @@ class AvatarMe extends Component {
                         data-bs-toggle="popover"
                     />
                     <div type="button" className={`user-presence ${presence}`}></div>
-                    <div type="button" className="user-notification" id="notification-mark">99+</div>
+                    {(messages.length > 0) && <div type="button" className="user-notification" id="notification-mark">
+                        {messages.length > 9 ? '9+' : messages.length}
+                    </div>}
                 </div>
                 <input
                     type="file"
@@ -213,7 +226,7 @@ class AvatarMe extends Component {
                 <div
                     className="toast-container"
                     style={{ top: `${toastPosition.top}px`, left: `${toastPosition.left}px` }}>
-                    {showPresenceToast && <PresenceToast presence={presence} onUpdatePresence={this.handlePresenceChange} />}
+                    {showPresenceToast && <PresenceToast presence={presence} onUpdatePresence={this.handlePresenceChange} messages={messages}/>}
                 </div>
             </div>
         );

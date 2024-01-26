@@ -1,13 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import { Toast } from 'bootstrap';
 
-const PresenceToast = ({ presence, onUpdatePresence }) => {
+// TODO: rename presence to event (such as PresenceToast to EventToast ...)
+const PresenceToast = ({ presence, onUpdatePresence, messages }) => {
     const toastRef = useRef(null);
 
     useEffect(() => {
         const messagingToast = new Toast(toastRef.current);
-        messagingToast.show();
-    }, []);
+
+        if (!messagingToast.isShown()) {
+            messagingToast.show();
+        }
+    }, [messages]);
+
 
     const getStatusStyle = (statusType) => {
 
@@ -27,7 +32,7 @@ const PresenceToast = ({ presence, onUpdatePresence }) => {
     };
 
     return (
-        <div className="toast align-items-center border-1" style={{ width: '300px', overflowY: 'auto' }} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
+        <div className="toast align-items-center border-1" style={{ width: '300px' }} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
             <div className="">
                 <div className="toast-body">
                     <div className="my-1 pb-2">
@@ -60,32 +65,24 @@ const PresenceToast = ({ presence, onUpdatePresence }) => {
                             Offline
                         </span>
                     </div>
-                    <div className="mt-3 py-2">
-                        <span className="fw-light fs-5">
-                            Notifications
-                        </span><br />
-                        <div className="border rounded d-flex justify-content-between align-items-start p-2 my-2">
-                            <div className="ms-2 me-auto overflow-x-auto">
-                                <div className="fw-bold">Name of the message publisher</div>
-                                Content of the message
-                            </div>
-                            <span className="badge bg-success-subtle rounded-pill">2024-01-27</span>
+                    {(messages.length > 0) &&
+                        <div className="mt-3 py-2">
+                            <span className="fw-light fs-5">
+                                Notifications
+                            </span><br/>
+                            {/* iterate for message in messages */}
+                            {messages.map((message, index) => (
+                                <div key={index}
+                                     className="border rounded d-flex justify-content-between align-items-start p-2 my-2">
+                                    <div className="ms-2 me-auto overflow-x-auto">
+                                        <div className="fw-bold">{message.publisher}</div>
+                                        {message.newPresence}
+                                    </div>
+                                    <span className="badge bg-success-subtle rounded-pill">{message.timestamp}</span>
+                                </div>
+                            ))}
                         </div>
-                        <div className="border rounded d-flex justify-content-between align-items-start p-2 my-2">
-                            <div className="ms-2 me-auto overflow-x-auto">
-                                <div className="fw-bold">Name of the message publisher</div>
-                                Content of the message
-                            </div>
-                            <span className="badge bg-success-subtle rounded-pill">2024-01-27</span>
-                        </div>
-                        <div className="border rounded d-flex justify-content-between align-items-start p-2 my-2">
-                            <div className="ms-2 me-auto overflow-x-auto">
-                                <div className="fw-bold">Name of the message publisher</div>
-                                Content of the message
-                            </div>
-                            <span className="badge bg-success-subtle rounded-pill">2024-01-27</span>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
