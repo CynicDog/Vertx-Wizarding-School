@@ -27,11 +27,11 @@ const PresenceToast = ({ presence, onUpdatePresence }) => {
     };
 
     return (
-        <div className="toast align-items-center border-1" style={{ height: '400px', width: '300px', overflowY: 'auto' }} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
+        <div className="toast align-items-center border-1" style={{ width: '300px', overflowY: 'auto' }} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
             <div className="">
                 <div className="toast-body">
                     <div className="my-1 pb-2">
-                        <span className="fw-light">Currently I am ... </span> <br />
+                        <span className="fw-light fs-5">Currently I am ... </span> <br />
                     </div>
                     <div className="mx-1">
                         <span
@@ -60,8 +60,31 @@ const PresenceToast = ({ presence, onUpdatePresence }) => {
                             Offline
                         </span>
                     </div>
-                    <div className="my-1 pb-2">
-                        <span className="fw-light">Currently I am ... </span> <br />
+                    <div className="mt-3 py-2">
+                        <span className="fw-light fs-5">
+                            Notifications
+                        </span><br />
+                        <div className="border rounded d-flex justify-content-between align-items-start p-2 my-2">
+                            <div className="ms-2 me-auto overflow-x-auto">
+                                <div className="fw-bold">Name of the message publisher</div>
+                                Content of the message
+                            </div>
+                            <span className="badge bg-success-subtle rounded-pill">2024-01-27</span>
+                        </div>
+                        <div className="border rounded d-flex justify-content-between align-items-start p-2 my-2">
+                            <div className="ms-2 me-auto overflow-x-auto">
+                                <div className="fw-bold">Name of the message publisher</div>
+                                Content of the message
+                            </div>
+                            <span className="badge bg-success-subtle rounded-pill">2024-01-27</span>
+                        </div>
+                        <div className="border rounded d-flex justify-content-between align-items-start p-2 my-2">
+                            <div className="ms-2 me-auto overflow-x-auto">
+                                <div className="fw-bold">Name of the message publisher</div>
+                                Content of the message
+                            </div>
+                            <span className="badge bg-success-subtle rounded-pill">2024-01-27</span>
+                        </div>
                     </div>
                 </div>
             </div>
