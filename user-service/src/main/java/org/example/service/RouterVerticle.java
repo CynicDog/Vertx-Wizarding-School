@@ -1,34 +1,37 @@
-package org.example;
+package org.example.service;
 
 import io.reactivex.Completable;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.mongo.MongoAuthenticationOptions;
 import io.vertx.ext.auth.mongo.MongoAuthorizationOptions;
 import io.vertx.reactivex.core.AbstractVerticle;
-import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.core.eventbus.EventBus;
 import io.vertx.reactivex.ext.auth.mongo.MongoAuthentication;
 import io.vertx.reactivex.ext.auth.mongo.MongoUserUtil;
 import io.vertx.reactivex.ext.mongo.MongoClient;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import io.vertx.reactivex.kafka.client.producer.KafkaProducer;
+import org.example.UserServiceMainVerticle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.example.config.KafkaConfig.producerConfig;
 import static org.example.config.MongoConfig.mongoConfig;
 import static org.example.handler.RegisterHandler.*;
+import static org.example.handler.RegisterHandler.isUniqueEmailAddress;
 import static org.example.handler.UserHandler.*;
 
-public class UserServiceVerticle extends AbstractVerticle {
+public class RouterVerticle extends AbstractVerticle {
 
     private static final int HTTP_PORT = 3000;
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceVerticle.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceMainVerticle.class);
 
     private MongoClient mongoClient;
     private MongoAuthentication mongoAuthProvider;
     private MongoUserUtil mongoUserUtil;
     private KafkaProducer<String, JsonObject> kafkaProducer;
+    private EventBus eventBus;
 
     @Override
     public Completable rxStart() {
@@ -36,6 +39,7 @@ public class UserServiceVerticle extends AbstractVerticle {
         mongoAuthProvider = MongoAuthentication.create(mongoClient, new MongoAuthenticationOptions());
         mongoUserUtil = MongoUserUtil.create(mongoClient, new MongoAuthenticationOptions(), new MongoAuthorizationOptions());
         kafkaProducer = KafkaProducer.create(vertx, producerConfig());
+        eventBus = vertx.eventBus();
 
         Router router = Router.router(vertx);
 
@@ -43,7 +47,7 @@ public class UserServiceVerticle extends AbstractVerticle {
         router.post().handler(bodyHandler);
         router.put().handler(bodyHandler);
 
-        router.post("/register").handler(ctx -> register(ctx, mongoClient, mongoUserUtil, kafkaProducer));
+        router.post("/register").handler(ctx -> register(ctx, mongoClient, mongoUserUtil, kafkaProducer, eventBus));
         router.post("/authenticate").handler(ctx -> authenticate(ctx, mongoAuthProvider));
         router.get("/is-unique").handler(ctx -> {
             // duplicate validation either on username or email address
@@ -61,14 +65,5 @@ public class UserServiceVerticle extends AbstractVerticle {
                 .requestHandler(router)
                 .rxListen(HTTP_PORT)
                 .ignoreElement();
-    }
-
-    public static void main(String[] args ) {
-        Vertx.vertx()
-                .rxDeployVerticle(new UserServiceVerticle())
-                .subscribe(
-                        ok -> logger.info("HTTP server started on port {}", HTTP_PORT),
-                        err -> logger.error(err.getMessage())
-                );
     }
 }
