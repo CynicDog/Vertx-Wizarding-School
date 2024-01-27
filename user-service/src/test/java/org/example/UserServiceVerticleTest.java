@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Unit test for simple UserServiceMainVerticle.
+ * Unit test for simple DeployerVerticle.
  */
 public class UserServiceVerticleTest
     extends TestCase
