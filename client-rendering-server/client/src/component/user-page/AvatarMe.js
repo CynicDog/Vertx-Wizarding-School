@@ -1,4 +1,4 @@
-import './AvatarMe.css';
+import './Avatar.css';
 import React, { Component } from 'react';
 import EventBus from 'vertx3-eventbus-client';
 import Image from 'image-js';
@@ -25,7 +25,7 @@ class AvatarMe extends Component {
 
         // TODO: Error handling
         // Fetch user profile photo from server based on the username
-        fetch(`http://localhost:4000/api/v1/user/profile`, {
+        fetch(`http://localhost:4000/api/v1/me/profile`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
@@ -45,6 +45,18 @@ class AvatarMe extends Component {
                 console.error('Error fetching user photo', error);
             });
 
+        const eventBus= new EventBus("http://localhost:8080/eventbus");
+        eventBus.enableReconnect(true);
+
+        eventBus.onopen = () => {
+            eventBus.registerHandler("client.updates.user.register", (err, message) => {
+                const newMessage = message.body;
+                this.setState((prevState) => ({
+                    messages: [...prevState.messages, newMessage],
+                }));
+            });
+        }
+
         this.initPopover();
 
         document.body.addEventListener('click', (event) => {
@@ -58,24 +70,12 @@ class AvatarMe extends Component {
                 this.handlePresenceIconClick(presenceIcon);
             }
         });
-
-        const eventBus= new EventBus("http://localhost:8080/eventbus");
-        eventBus.enableReconnect(true);
-
-        eventBus.onopen = () => {
-            eventBus.registerHandler("client.updates.user.register", (err, message) => {
-                const newMessage = message.body;
-                this.setState((prevState) => ({
-                    messages: [...prevState.messages, newMessage],
-                }));
-            });
-        }
     }
 
     initPopover() {
         const popoverContent = `
             <a class="link-secondary icon-link icon-link-hover mx-1">
-                <p class="bi bi-chat-dots-fill" id="presence-icon"></p>
+                <p class="bi bi-bell-fill" id="presence-icon"></p>
             </a> / 
             <a class="link-secondary icon-link icon-link-hover mx-1">
                 <p class="bi bi-camera-fill" id="camera-icon"></p>
@@ -133,7 +133,7 @@ class AvatarMe extends Component {
 
                 // TODO: Error handling
                 // Send the resized file to the server using fetch
-                fetch(`http://localhost:4000/api/v1/user/photo`, {
+                fetch(`http://localhost:4000/api/v1/me/photo`, {
                     method: 'POST',
                     body: JSON.stringify({ base64Data }),
                     headers: {
@@ -169,7 +169,7 @@ class AvatarMe extends Component {
             const {username} = this.state;
 
             // TODO: Error handling
-            fetch(`http://localhost:4000/api/v1/user/presence`, { // TODO: migrate to public-api-server -> user-service
+            fetch(`http://localhost:4000/api/v1/me/presence`, { // TODO: migrate to public-api-server -> user-service
                 method : 'POST',
                 body: JSON.stringify({ username, newPresence }),
                 headers: {
