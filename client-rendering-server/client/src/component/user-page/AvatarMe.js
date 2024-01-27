@@ -14,7 +14,7 @@ class AvatarMe extends Component {
             userImageSrc: '',
             showPresenceToast: false,
             toastPosition: { top: 0,  left: 0 },
-            presence: 'available',
+            presence: '',
             messages: []
         };
     }
@@ -39,7 +39,7 @@ class AvatarMe extends Component {
             })
             .then((data) => {
                 // Assuming the server returns the photo as base64 data
-                this.setState({ userImageSrc: data.profilePhoto });
+                this.setState({ userImageSrc: data.profilePhoto, presence: data.presence });
             })
             .catch((error) => {
                 console.error('Error fetching user photo', error);
@@ -172,7 +172,7 @@ class AvatarMe extends Component {
             const {username} = this.state;
 
             // TODO: Error handling
-            fetch(`/user/presence`, { // TODO: migrate to public-api-server -> user-service
+            fetch(`http://localhost:4000/api/v1/user/presence`, { // TODO: migrate to public-api-server -> user-service
                 method : 'POST',
                 body: JSON.stringify({ username, newPresence }),
                 headers: {
