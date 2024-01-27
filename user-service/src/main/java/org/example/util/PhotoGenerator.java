@@ -55,7 +55,7 @@ public class PhotoGenerator {
         float x = (imageSize - stringWidth) / 2f;
         float y = (imageSize - stringHeight) / 2f + fontMetrics.getAscent(); // Adjust y to include ascent
 
-        graphics.drawString(username.substring(0, 1), x + .9f, y - 1.3f);
+        graphics.drawString(username.substring(0, 1), x, y - 1.3f);
 
         graphics.dispose();
 
