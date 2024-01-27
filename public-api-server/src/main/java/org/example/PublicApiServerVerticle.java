@@ -63,9 +63,11 @@ public class PublicApiServerVerticle extends AbstractVerticle {
         }
 
         { // handles requests on user profile data
-            router.get(prefix + "/user/profile").handler(jwtAuthHandler).handler(ctx -> fetchUser(ctx, webClient));
-            router.post(prefix + "/user/photo").handler(jwtAuthHandler).handler(ctx -> postUserProfilePhoto(ctx, webClient));
-            router.post(prefix + "/user/presence").handler(jwtAuthHandler).handler(ctx -> postUserPresence(ctx, webClient));
+            router.get(prefix + "/me/profile").handler(jwtAuthHandler).handler(ctx -> fetchMe(ctx, webClient));
+            router.post(prefix + "/me/photo").handler(jwtAuthHandler).handler(ctx -> postUserProfilePhoto(ctx, webClient));
+            router.post(prefix + "/me/presence").handler(jwtAuthHandler).handler(ctx -> postUserPresence(ctx, webClient));
+
+            router.get(prefix + "/user/profile").handler(ctx -> fetchUser(ctx, webClient));
         }
 
         { // handles request on house data

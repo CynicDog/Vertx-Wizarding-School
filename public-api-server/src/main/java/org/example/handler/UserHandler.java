@@ -1,12 +1,8 @@
 package org.example.handler;
 
 import io.vertx.core.json.JsonObject;
-import io.vertx.reactivex.core.Vertx;
-import io.vertx.reactivex.core.buffer.Buffer;
-import io.vertx.reactivex.ext.web.FileUpload;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.client.WebClient;
-import io.vertx.reactivex.ext.web.client.predicate.ResponsePredicate;
 import io.vertx.reactivex.ext.web.codec.BodyCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +11,26 @@ public class UserHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
 
-    public static void fetchUser(RoutingContext ctx, WebClient webClient) {
+    public static void fetchMe(RoutingContext ctx, WebClient webClient) {
         String username = ctx.user().principal().getString("sub");
+
+        webClient.get(3000, "localhost", "/profile?username=" + username)
+                .as(BodyCodec.jsonObject())
+                .rxSend()
+                .subscribe(
+                        response -> {
+                            logger.info("response on the request on `GET :3000/profile` reads: {}", response.statusMessage());
+                            ctx.response().putHeader("Content-Type", "application/json").end(response.body().encode());
+                        },
+                        err -> {
+                            logger.error(err.getMessage());
+                            ctx.fail(err);
+                        }
+                );
+    }
+
+    public static void fetchUser(RoutingContext ctx, WebClient webClient) {
+        String username = ctx.request().getParam("username");
 
         webClient.get(3000, "localhost", "/profile?username=" + username)
                 .as(BodyCodec.jsonObject())
