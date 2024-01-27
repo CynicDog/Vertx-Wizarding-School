@@ -49,9 +49,9 @@ export class SignupForm extends Component {
             this.setState((prevState) => ({
                 validationStatus: {...prevState.validationStatus, username: false}, usernameMessage: "Required."
             }))
-        } else if (username.trim().length > 13) {
+        } else if (username.trim().length > 17) {
             this.setState((prevState) => ({
-                validationStatus: {...prevState.validationStatus, username: false}, usernameMessage: "Should be under 13 characters."
+                validationStatus: {...prevState.validationStatus, username: false}, usernameMessage: "Should be under 17 characters."
             }))
         } else if (username.trim().includes(' ')) {
             this.setState((prevState) => ({
