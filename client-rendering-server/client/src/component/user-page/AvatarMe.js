@@ -63,11 +63,8 @@ class AvatarMe extends Component {
         eventBus.enableReconnect(true);
 
         eventBus.onopen = () => {
-            eventBus.registerHandler("client.updates.user.presence", (err, message) => {
+            eventBus.registerHandler("client.updates.user.register", (err, message) => {
                 const newMessage = message.body;
-                console.log(message);
-
-                // Update the state by appending the new message
                 this.setState((prevState) => ({
                     messages: [...prevState.messages, newMessage],
                 }));
@@ -206,7 +203,6 @@ class AvatarMe extends Component {
                         className="rounded-circle object-fit-cover position-relative mx-1"
                         style={{ width: '35px', height: '35px' }}
                         src={userImageSrc}
-                        alt={`${username}'s profile`}
                         ref={(img) => (this.userImage = img)}
                         data-bs-toggle="popover"
                     />
