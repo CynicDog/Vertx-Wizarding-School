@@ -24,7 +24,7 @@ import static org.example.handler.UserHandler.*;
 public class RouterVerticle extends AbstractVerticle {
 
     private static final int HTTP_PORT = 3000;
-    private static final Logger logger = LoggerFactory.getLogger(DeployerVerticle.class);
+    private static final Logger logger = LoggerFactory.getLogger(RouterVerticle.class);
 
     private MongoClient mongoClient;
     private MongoAuthentication mongoAuthProvider;
