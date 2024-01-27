@@ -41,11 +41,6 @@ public class RegisterHandler {
 //                        .put("pet", body.getString("pet"))
                     );
 
-            JsonObject bodyRecord = new JsonObject()
-                    .put("publisher",  "👨🏻‍💻 User Service")
-                    .put("at", LocalDate.now().toString())
-                    .put("content", String.format("'%s' has joined our community!", username));
-
             mongoUserUtil
                     .rxCreateUser(username, password)
                     .flatMapMaybe(docId ->
@@ -55,23 +50,27 @@ public class RegisterHandler {
                                         return Maybe.error(err);
                                     }))
                     .ignoreElement()
-                    .subscribe(() -> {
-                        logger.info("Registered successfully.");
-                        kafkaProducer
-                                .rxSend(KafkaProducerRecord.create("user.register", username, bodyRecord))
-                                .subscribe(
-                                        response -> {
-                                            logger.info("KafkaProducer.rxSend on the topic of 'user.register' - " + ctx.response().getStatusMessage());
-                                            },
-                                        err -> {
-                                            logger.error("Publishing kafka record's been failed.");
-                                        });
-                        ctx.response().end();
-                        },
+                    .subscribe(
+                            () -> {
+                                logger.info("Registered successfully.");
+
+                                JsonObject bodyRecord = new JsonObject()
+                                        .put("publisher",  "👨🏻‍💻 User Service")
+                                        .put("at", LocalDate.now().toString())
+                                        .put("content", String.format("'%s' has joined our community!", username));
+
+                                kafkaProducer
+                                        .rxSend(KafkaProducerRecord.create("user.register", username, bodyRecord))
+                                        .subscribe(
+                                                response -> logger.info("KafkaProducer.rxSend on the topic of 'user.register' - " + ctx.response().getStatusMessage()),
+                                                err -> logger.error("Publishing kafka record's been failed.")
+                                        );
+                                ctx.response().end();
+                            },
                             err -> {
-                        logger.error(err.getMessage());
-                        ctx.fail(err);
-                    });
+                                logger.error(err.getMessage());
+                                ctx.fail(err);
+                            });
         });
     }
 
