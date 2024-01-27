@@ -10,18 +10,25 @@ import java.util.Random;
 public class PhotoGenerator {
 
     private static final Color[] PASTEL_COLORS = {
-            hexToColor("8db150"),
-            hexToColor("c99f88"),
-            hexToColor("bca78a"),
-            hexToColor("3d3d3d"),
-            hexToColor("477391"),
-            hexToColor("665987"),
-            hexToColor("42663a"),
-            hexToColor("b33360"),
-            hexToColor("cf7684"),
-            hexToColor("94b79b"),
-            hexToColor("d5a5a0"),
-            hexToColor("747635")
+            hexToColor("EE352E"),
+            hexToColor("00933C"),
+            hexToColor("0033A0"),
+            hexToColor("0039A6"),
+            hexToColor("FFD100"),
+            hexToColor("FF6319"),
+            hexToColor("B933AD"),
+            hexToColor("0033A0"),
+            hexToColor("FF6319"),
+            hexToColor("0033A0"),
+            hexToColor("FF6319"),
+            hexToColor("6CBE45"),
+            hexToColor("996633"),
+            hexToColor("A7A9AC"),
+            hexToColor("FF6319"),
+            hexToColor("FCCC0A"),
+            hexToColor("FCCC0A"),
+            hexToColor("FCCC0A"),
+            hexToColor("FCCC0A")
     };
 
     private static Color hexToColor(String hex) {
