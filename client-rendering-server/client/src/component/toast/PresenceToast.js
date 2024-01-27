@@ -81,7 +81,7 @@ const PresenceToast = ({ presence, onUpdatePresence, messages }) => {
                                             {message.publisher}
                                         </div>
                                         <div className="fw-lighter">
-                                            {message.newPresence}
+                                            {message.content}
                                         </div>
                                     </div>
                                     <span className="badge bg-success-subtle rounded-pill">{message.at}</span>
