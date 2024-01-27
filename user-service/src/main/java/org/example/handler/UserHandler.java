@@ -50,6 +50,7 @@ public class UserHandler {
         JsonObject query = new JsonObject().put("username", ctx.request().getParam("username"));
         JsonObject photoData = new JsonObject().put("$set", new JsonObject().put("profilePhoto", ctx.getBodyAsJson().getString("base64Data")));
 
+        // TODO: Implement denormalization for 'presence' property, creating a new collection with relations over 'username' and 'presence'
         mongoClient.rxFindOneAndUpdate("user", query, photoData)
                 .ignoreElement()
                 .subscribe(
@@ -72,27 +73,16 @@ public class UserHandler {
         JsonObject query = new JsonObject().put("username", username);
         JsonObject presenceData = new JsonObject().put("$set", new JsonObject().put("presence", bodyRecord.getString("newPresence")));
 
-        // for kafka messaging publish
-        bodyRecord.put("publisher", "User Service");
-        bodyRecord.put("at", LocalDate.now().toString());
+//        // for kafka messaging publish
+//        bodyRecord.put("publisher", "👨🏻‍💻 User Service");
+//        bodyRecord.put("at", LocalDate.now().toString());
 
         mongoClient.rxFindOneAndUpdate("user", query, presenceData)
                 .ignoreElement()
                 .subscribe(
                         () -> {
                             logger.info("Successfully updated.");
-                            kafkaProducer
-                                    .rxSend(KafkaProducerRecord.create("user.presence", username, bodyRecord))
-                                    .subscribe(
-                                            response -> {
-                                                logger.info("KafkaProducer.rxSend on the topic of 'user.presence' - " + ctx.response().getStatusMessage());
-                                                ctx.response().end();
-                                            },
-                                            err -> {
-                                                logger.error("Publishing user presence failed.");
-                                                ctx.fail(500);
-                                            }
-                                    );
+                            ctx.response().end();
                         },
                         err -> {
                             logger.error(err.getMessage());
