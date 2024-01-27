@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import static org.example.config.KafkaConfig.consumerConfig;
 import static org.example.config.KafkaConfig.producerConfig;
-import static org.example.handler.UserHandler.postUserPresence;
 
 public class ClientRenderingAppVerticle extends AbstractVerticle {
     private static final int HTTP_PORT = 8080;
@@ -62,9 +61,6 @@ public class ClientRenderingAppVerticle extends AbstractVerticle {
                     .putHeader("Content-Type", "text/plain")
                     .end("Greetings from Vert.x server.");
         });
-
-        // TODO: migrate to public-api-server -> user-service
-        router.post("/user/presence").handler(ctx -> postUserPresence(ctx, kafkaProducer));
 
         return vertx.createHttpServer()
                 .requestHandler(router)

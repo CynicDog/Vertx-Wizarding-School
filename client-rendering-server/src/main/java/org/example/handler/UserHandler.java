@@ -13,24 +13,4 @@ public class UserHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(UserHandler.class);
 
-    public static void postUserPresence(RoutingContext ctx, KafkaProducer kafkaProducer) {
-
-        String username = ctx.getBodyAsJson().getString("username");
-        JsonObject record = ctx.getBodyAsJson();
-        record.put("publisher", "Client Rendering Server");
-        record.put("at", LocalDate.now().toString());
-
-        kafkaProducer
-                .rxSend(KafkaProducerRecord.create("user.presence", username, record))
-                .subscribe(
-                        response -> {
-                            logger.info("KafkaProducer.rxSend on the topic of 'user.presence' - " + ctx.response().getStatusMessage());
-                            ctx.response().end();
-                        },
-                        err -> {
-                            logger.error("Publishing user presence failed.");
-                            ctx.fail(500);
-                        }
-                );
-    }
 }
