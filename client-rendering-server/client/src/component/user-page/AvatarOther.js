@@ -1,28 +1,13 @@
-import './Avatar.css';
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Popover } from 'bootstrap';
 
-class AvatarOther extends Component {
-    constructor(props) {
-        super(props);
+const AvatarOther = ({ username }) => {
+    const [userImageSrc, setUserImageSrc] = useState('');
+    const [presence, setPresence] = useState('');
 
-        this.state = {
-            username: this.props.username,
-            userImageSrc: '',
-            showPresenceToast: false,
-            toastPosition: { top: 0,  left: 0 },
-            presence: '',
-        };
-    }
+    useEffect(() => {
 
-    componentDidMount() {
-        const {username} = this.state;
-
-        // TODO: Error handling
-        // Fetch user profile photo from server based on the username
-        fetch(`http://localhost:4000/api/v1/user/profile?username=${username}`, {
-            method: 'GET'
-        })
+        fetch(`http://localhost:4000/api/v1/user/profile?username=${username}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch user photo');
@@ -30,19 +15,18 @@ class AvatarOther extends Component {
                 return response.json();
             })
             .then((data) => {
-                // Assuming the server returns the photo as base64 data
-                this.setState({ userImageSrc: data.profilePhoto, presence: data.presence });
+                setUserImageSrc(data.profilePhoto);
+                setPresence(data.presence);
+
+                // Initialize popover here
+                initPopover();
             })
             .catch((error) => {
                 console.error('Error fetching user photo', error);
             });
+    }, [username]);
 
-        this.initPopover();
-    }
-
-    initPopover() {
-        const {username} = this.state;
-
+    const initPopover = () => {
         const popoverContent = `
             <a class="link-secondary icon-link icon-link-hover mx-1">
                 <p class="bi bi-chat-dots-fill" id="chat-icon" data-username="${username}"></p>
@@ -59,24 +43,21 @@ class AvatarOther extends Component {
             html: true,
             customClass: 'user-profile-photo-popover'
         });
-    }
+    };
 
-    render() {
-        const { username, userImageSrc, showPresenceToast, toastPosition, presence, messages } = this.state;
-        return (
-            <div className="user-profile-photo-wrapper">
-                <img
-                    id={`img-${username}`}
-                    type="button"
-                    className="rounded-circle object-fit-cover position-relative mx-1"
-                    style={{ width: '35px', height: '35px' }}
-                    src={userImageSrc}
-                    data-bs-toggle="popover"
-                />
-                <div type="button" className={`user-presence ${presence}`}></div>
-            </div>
-        );
-    }
-}
+    return (
+        <div className="user-profile-photo-wrapper">
+            <img
+                id={`img-${username}`}
+                type="button"
+                className="rounded-circle object-fit-cover position-relative mx-1"
+                style={{ width: '35px', height: '35px' }}
+                src={userImageSrc}
+                data-bs-toggle="popover"
+            />
+            <div type="button" className={`user-presence ${presence}`}></div>
+        </div>
+    );
+};
 
 export default AvatarOther;
