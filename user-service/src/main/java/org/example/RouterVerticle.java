@@ -1,4 +1,4 @@
-package org.example.service;
+package org.example;
 
 import io.reactivex.Completable;
 import io.vertx.core.json.JsonObject;
@@ -12,7 +12,6 @@ import io.vertx.reactivex.ext.mongo.MongoClient;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import io.vertx.reactivex.kafka.client.producer.KafkaProducer;
-import org.example.UserServiceMainVerticle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +24,7 @@ import static org.example.handler.UserHandler.*;
 public class RouterVerticle extends AbstractVerticle {
 
     private static final int HTTP_PORT = 3000;
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceMainVerticle.class);
+    private static final Logger logger = LoggerFactory.getLogger(DeployerVerticle.class);
 
     private MongoClient mongoClient;
     private MongoAuthentication mongoAuthProvider;
