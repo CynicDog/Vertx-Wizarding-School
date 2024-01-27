@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import static org.example.config.RouterConfig.allowedHeaders;
 import static org.example.config.RouterConfig.allowedMethods;
 import static org.example.handler.AccountHandler.*;
+import static org.example.handler.HouseHandler.fetchHouse;
 import static org.example.handler.UserHandler.*;
 
 public class PublicApiServerVerticle extends AbstractVerticle {
@@ -65,6 +66,10 @@ public class PublicApiServerVerticle extends AbstractVerticle {
             router.get(prefix + "/user/profile").handler(jwtAuthHandler).handler(ctx -> fetchUser(ctx, webClient));
             router.post(prefix + "/user/photo").handler(jwtAuthHandler).handler(ctx -> postUserProfilePhoto(ctx, webClient));
             router.post(prefix + "/user/presence").handler(jwtAuthHandler).handler(ctx -> postUserPresence(ctx, webClient));
+        }
+
+        { // handles request on house data
+            router.get(prefix + "/house/:houseTitle").handler(ctx -> fetchHouse(ctx, webClient));
         }
 
 
