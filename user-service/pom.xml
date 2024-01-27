@@ -48,6 +48,10 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-hazelcast</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -57,7 +61,7 @@
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>1.5.0</version>
                     <configuration>
-                        <mainClass>org.example.UserServiceVerticle</mainClass>
+                        <mainClass>org.example.UserServiceMainVerticle</mainClass>
                     </configuration>
                 </plugin>
             </plugins>
