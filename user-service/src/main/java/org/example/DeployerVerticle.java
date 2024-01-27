@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 public class DeployerVerticle {
 
-    private static final int HTTP_PORT = 3000;
     private static final Logger logger = LoggerFactory.getLogger(DeployerVerticle.class);
 
     public static void main(String[] args ) {
