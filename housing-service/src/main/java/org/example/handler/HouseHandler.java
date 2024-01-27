@@ -18,7 +18,8 @@ public class HouseHandler {
                 .put("_id", 0)
                 .put("title", 1)
                 .put("quota", 1)
-                .put("points", 1);
+                .put("points", 1)
+                .put("head", 1);
 
         mongoClient.rxFindOne("house", query, fields)
                 .toSingle()
