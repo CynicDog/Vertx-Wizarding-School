@@ -27,51 +27,47 @@ public class RegisterHandler {
         String password = body.getString("password");
 
         // TODO: resiliency over failures of eventbus, mongodb and kafka server
-        eventBus.<String>request("user.photo.generate", username, photo -> {
-            JsonObject supplementaryDetails = new JsonObject()
-                    .put("$set", new JsonObject()
+        eventBus.<String>rxRequest("user.photo.generate", username)
+                .flatMapCompletable(photo -> {
+                    JsonObject supplementaryDetails = new JsonObject()
+                            .put("$set", new JsonObject()
                                     .put("emailAddress", body.getString("emailAddress"))
                                     .put("type", body.getString("type"))
                                     .put("createdAt", new Date().getTime())
-                                    .put("profilePhoto", photo.result().body())
-                                    .put("presence", "available")
-//                        .put("house", body.getString("house"))
-//                        .put("wand", body.getString("wand"))
-//                        .put("patronus", body.getString("patronus"))
-//                        .put("pet", body.getString("pet"))
-                    );
+                                    .put("profilePhoto", photo.body())
+                                    .put("presence", "available"));
 
-            mongoUserUtil
-                    .rxCreateUser(username, password)
-                    .flatMapMaybe(docId ->
-                            mongoClient
-                                    .rxFindOneAndUpdate("user", new JsonObject().put("_id", docId), supplementaryDetails)
-                                    .onErrorResumeNext(err -> {
-                                        return Maybe.error(err);
-                                    }))
-                    .ignoreElement()
-                    .subscribe(
-                            () -> {
-                                logger.info("Registered successfully.");
+                    return mongoUserUtil
+                            .rxCreateUser(username, password)
+                            .flatMapMaybe(docId ->
+                                    mongoClient
+                                            .rxFindOneAndUpdate("user", new JsonObject().put("_id", docId), supplementaryDetails)
+                                            .onErrorResumeNext(err -> {
+                                                return Maybe.error(err);
+                                            }))
+                            .ignoreElement();
+                }).subscribe(
+                        () -> {
+                            logger.info("Registered successfully.");
 
-                                JsonObject bodyRecord = new JsonObject()
-                                        .put("publisher",  "👨🏻‍💻 User Service")
-                                        .put("at", LocalDate.now().toString())
-                                        .put("content", String.format("'%s' has joined our community!", username));
+                            JsonObject bodyRecord = new JsonObject()
+                                    .put("publisher",  "👨🏻‍💻 User Service")
+                                    .put("at", LocalDate.now().toString())
+                                    .put("content", String.format("'%s' has joined our community!", username));
 
-                                kafkaProducer
-                                        .rxSend(KafkaProducerRecord.create("user.register", username, bodyRecord))
-                                        .subscribe(
-                                                response -> logger.info("KafkaProducer.rxSend on the topic of 'user.register' - " + ctx.response().getStatusMessage()),
-                                                err -> logger.error("Publishing kafka record's been failed.")
-                                        );
-                                ctx.response().end();
-                            },
-                            err -> {
-                                logger.error(err.getMessage());
-                                ctx.fail(err);
-                            });
-        });
+                            kafkaProducer
+                                    .rxSend(KafkaProducerRecord.create("user.register", username, bodyRecord))
+                                    .subscribe(
+                                            response -> logger.info("KafkaProducer.rxSend on the topic of 'user.register' - " + ctx.response().getStatusMessage()),
+                                            err -> logger.error("Publishing kafka record's been failed.")
+                                    );
+                            ctx.response().end();
+                        },
+                        err -> {
+                            logger.error(err.getMessage());
+                            ctx.fail(err);
+                        }
+                );
     }
 
     public static void isUniqueUsername(RoutingContext ctx, MongoClient mongoClient) {
