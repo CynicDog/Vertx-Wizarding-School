@@ -93,7 +93,6 @@ public class UserHandler {
                                                 ctx.fail(500);
                                             }
                                     );
-                            ctx.response().end();
                         },
                         err -> {
                             logger.error(err.getMessage());
