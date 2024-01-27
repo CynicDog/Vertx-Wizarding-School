@@ -61,7 +61,7 @@
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>1.5.0</version>
                     <configuration>
-                        <mainClass>org.example.UserServiceMainVerticle</mainClass>
+                        <mainClass>org.example.DeployerVerticle</mainClass>
                     </configuration>
                 </plugin>
             </plugins>
