@@ -26,7 +26,7 @@ public class PhotoGenerateVerticle extends AbstractVerticle {
 
     private void generate(Message<String> message) {
         try {
-            String base64Image = "data:image/png;base64, " + PhotoGenerator.generateUserProfile(message.body());
+            String base64Image = "data:image/png;base64," + PhotoGenerator.generateUserProfile(message.body());
             message.reply(base64Image);
         } catch (IOException e) {
             message.fail(500, "Error generating photo: " + e.getMessage());
