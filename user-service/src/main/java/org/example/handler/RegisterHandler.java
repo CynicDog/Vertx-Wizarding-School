@@ -7,20 +7,24 @@ import io.vertx.reactivex.ext.auth.mongo.MongoUserUtil;
 import io.vertx.reactivex.ext.mongo.MongoClient;
 import io.vertx.reactivex.ext.web.RoutingContext;
 
+import io.vertx.reactivex.kafka.client.producer.KafkaProducer;
+import io.vertx.reactivex.kafka.client.producer.KafkaProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class RegisterHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RegisterHandler.class);
 
-    public static void register(RoutingContext ctx, MongoClient mongoClient, MongoUserUtil mongoUserUtil) {
+    public static void register(RoutingContext ctx, MongoClient mongoClient, MongoUserUtil mongoUserUtil, KafkaProducer kafkaProducer) {
 
         logger.info(ctx.getBodyAsString());
 
         JsonObject body = ctx.getBodyAsJson();
+
         String username = body.getString("username");
         String password = body.getString("password");
 
@@ -36,6 +40,11 @@ public class RegisterHandler {
 //                        .put("pet", body.getString("pet"))
                 );
 
+        JsonObject bodyRecord = new JsonObject()
+                .put("publisher",  "👨🏻‍💻 User Service")
+                .put("at", LocalDate.now().toString())
+                .put("content", String.format("'%s' has joined our community!", username));
+
         mongoUserUtil
                 .rxCreateUser(username, password)
                 .flatMapMaybe(docId ->
@@ -48,6 +57,17 @@ public class RegisterHandler {
                 .subscribe(
                         () -> {
                             logger.info("Registered successfully.");
+
+                            kafkaProducer
+                                    .rxSend(KafkaProducerRecord.create("user.register", username, bodyRecord))
+                                    .subscribe(
+                                            response -> {
+                                                logger.info("KafkaProducer.rxSend on the topic of 'user.register' - " + ctx.response().getStatusMessage());
+                                            },
+                                            err -> {
+                                                logger.error("Publishing kafka record's been failed.");
+                                            }
+                                    );
                             ctx.response().end();
                         },
                         err -> {

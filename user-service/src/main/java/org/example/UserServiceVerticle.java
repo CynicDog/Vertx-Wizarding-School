@@ -43,7 +43,7 @@ public class UserServiceVerticle extends AbstractVerticle {
         router.post().handler(bodyHandler);
         router.put().handler(bodyHandler);
 
-        router.post("/register").handler(ctx -> register(ctx, mongoClient, mongoUserUtil));
+        router.post("/register").handler(ctx -> register(ctx, mongoClient, mongoUserUtil, kafkaProducer));
         router.post("/authenticate").handler(ctx -> authenticate(ctx, mongoAuthProvider));
         router.get("/is-unique").handler(ctx -> {
             // duplicate validation either on username or email address

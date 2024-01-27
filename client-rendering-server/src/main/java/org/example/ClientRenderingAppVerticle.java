@@ -34,12 +34,20 @@ public class ClientRenderingAppVerticle extends AbstractVerticle {
         webClient = WebClient.create(vertx);
         kafkaProducer = KafkaProducer.create(vertx, producerConfig());
 
-        KafkaConsumer.<String, JsonObject>create(vertx, consumerConfig("user-presence-group"))
-                .subscribe("user.presence")
+//        KafkaConsumer.<String, JsonObject>create(vertx, consumerConfig("user-group"))
+//                .subscribe("user.presence")
+//                .toFlowable()
+//                .subscribe(
+//                        record -> vertx.eventBus().publish("client.updates.user.presence", record.value()),
+//                        err -> logger.error("Forwarding's been failed.")
+//                );
+
+        KafkaConsumer.<String, JsonObject>create(vertx, consumerConfig("user-group"))
+                .subscribe("user.register")
                 .toFlowable()
                 .subscribe(
-                        record -> vertx.eventBus().publish("client.updates.user.presence", record.value()),
-                        err -> logger.error("Publishing user presence failed.")
+                        record -> vertx.eventBus().publish("client.updates.user.register", record.value()),
+                        err -> logger.error("Forwarding's been failed.")
                 );
 
         Router router = Router.router(vertx);
