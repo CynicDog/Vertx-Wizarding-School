@@ -91,13 +91,13 @@ public class AccountHandler {
                 .flatMap(resp -> {
                     logger.info("response on the request on `POST :3000/authenticate` reads: {}", resp.statusMessage());
                     // fetch supplementary details on user
-                    return webClient.get(3000, "localhost", "/fetch-user?username=" + username)
+                    return webClient.get(3000, "localhost", "/profile?username=" + username)
                             .expect(ResponsePredicate.SC_OK)
                             .as(BodyCodec.jsonObject())
                             .rxSend();
                 })
                 .map(resp -> {
-                    logger.info("response on the request on `GET :3000/fetch-user?username` {} reads: {}", username, resp.statusMessage());
+                    logger.info("response on the request on `GET :3000/profile?username` {} reads: {}", username, resp.statusMessage());
                     return resp.body().getString("emailAddress");
                 })
                 .map(email -> {
