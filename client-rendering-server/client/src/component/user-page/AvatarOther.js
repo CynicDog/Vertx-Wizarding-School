@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import EventBus from 'vertx3-eventbus-client';
 import { Popover } from 'bootstrap';
 
 const AvatarOther = ({ username }) => {
@@ -17,13 +18,12 @@ const AvatarOther = ({ username }) => {
             .then((data) => {
                 setUserImageSrc(data.profilePhoto);
                 setPresence(data.presence);
-
-                // Initialize popover here
-                initPopover();
             })
             .catch((error) => {
                 console.error('Error fetching user photo', error);
             });
+
+        initPopover();
     }, [username]);
 
     const initPopover = () => {

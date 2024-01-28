@@ -24,7 +24,6 @@ class AvatarMe extends Component {
         this.setState({ username });
 
         // TODO: Error handling
-        // Fetch user profile photo from server based on the username
         fetch(`http://localhost:4000/api/v1/me/profile`, {
             method: 'GET',
             headers: {
@@ -169,7 +168,7 @@ class AvatarMe extends Component {
             const {username} = this.state;
 
             // TODO: Error handling
-            fetch(`http://localhost:4000/api/v1/me/presence`, { // TODO: migrate to public-api-server -> user-service
+            fetch(`http://localhost:4000/api/v1/me/presence`, {
                 method : 'POST',
                 body: JSON.stringify({ username, newPresence }),
                 headers: {
