@@ -38,7 +38,7 @@ const AvatarOther = ({ username }) => {
 
         const imagePopover = new Popover(document.getElementById('img-' + username), {
             content: popoverContent,
-            placement: 'right',
+            placement: 'bottom',
             trigger: 'click',
             html: true,
             customClass: 'user-profile-photo-popover'
