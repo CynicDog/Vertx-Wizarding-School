@@ -1,4 +1,4 @@
-import AvatarOther from "../user-page/AvatarOther";
+import AvatarOther from "../../component/avatar/AvatarOther";
 import {useEffect} from "react";
 
 const HouseDetailCard = ({house, users}) => {

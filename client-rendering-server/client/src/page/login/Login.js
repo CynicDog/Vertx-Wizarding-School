@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import MessageToast from "../toast/MessageToast";
+import MessageToast from "../../component/toast/MessageToast";
 
 export class Login extends Component {
 

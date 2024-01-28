@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import Navbar from '../component/Navbar'
+import Navbar from '../component/nav/Navbar'
 export class Layout extends Component {
 
     render () {
