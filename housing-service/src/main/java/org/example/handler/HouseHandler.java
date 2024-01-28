@@ -55,7 +55,18 @@ public class HouseHandler {
                             .collect(Collectors.toList());
 
                     JsonObject userQuery = new JsonObject().put("_id", new JsonObject().put("$in", studentIds));
-                    return mongoClient.rxFind("user", userQuery)
+                    JsonArray pipeline = new JsonArray()
+                            .add(new JsonObject().put("$match", userQuery))
+                            .add(new JsonObject().put("$project", new JsonObject()
+                                    .put("username", 1)
+                                    .put("emailAddress", 1)
+                                    .put("presence", 1)
+                                    .put("profilePhoto", 1)
+                                    .put("type", 1)));
+
+                    return mongoClient.aggregate("user", pipeline)
+                            .toObservable()
+                            .toList()
                             .map(students -> {
                                 JsonObject result = new JsonObject().put("students", students);
                                 return result;
