@@ -34,7 +34,7 @@ const PresenceToast = ({ presence, onUpdatePresence, messages }) => {
     };
 
     return (
-        <div className="toast align-items-center border-1" style={{ width: '300px' }} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
+        <div className="toast bg-body-tertiary align-items-center border-1" style={{ width: '300px' }} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
             <div className="">
                 <div className="toast-body">
                     <div className="my-1 pb-2">
