@@ -27,7 +27,9 @@ public class ClientRenderingAppVerticle extends AbstractVerticle {
     private WebClient webClient;
     private KafkaProducer<String, JsonObject> kafkaProducer;
 
-    // TODO: enhance readability and maintainability by separating logics
+    // TODO:
+    //      0. enhance readability and maintainability by separating logics
+    //      1. add prefix on addresses of Kafka (e.g. kf.*) and Eventbus (e.g. eb.*)
     @Override
     public Completable rxStart() {
 
@@ -47,6 +49,14 @@ public class ClientRenderingAppVerticle extends AbstractVerticle {
                 .toFlowable()
                 .subscribe(
                         record -> vertx.eventBus().publish("client.updates.user.register", record.value()),
+                        err -> logger.error("Forwarding's been failed.")
+                );
+
+        KafkaConsumer.<String, JsonObject>create(vertx, consumerConfig("user-group"))
+                .subscribe("user.presence.update")
+                .toFlowable()
+                .subscribe(
+                        record -> vertx.eventBus().publish("client.updates.user.presence", record.value()),
                         err -> logger.error("Forwarding's been failed.")
                 );
 
