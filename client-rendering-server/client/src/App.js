@@ -10,7 +10,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle'
 import Course from "./component/course/Course";
-import HouseEntry from "./component/house/HouseEntry";
+import HouseMain from "./component/house/HouseMain";
 import {SignupForm} from "./component/signup/SignupForm";
 import {MyPage} from "./component/user-page/MyPage";
 
@@ -27,7 +27,7 @@ export default class App extends Component {
                     <Route path='/signup/:type' element={<SignupRouter />} />
                     <Route path='/login' element={<Login /> }></Route>
                     <Route path='/my-page' element={<MyPage />} />
-                    <Route path='/house' element={<HouseEntry />} />
+                    <Route path='/house' element={<HouseMain />} />
                     <Route path='/course' element={<Course />} />
                 </Routes>
             </Layout>
