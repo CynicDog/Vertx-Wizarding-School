@@ -60,6 +60,7 @@ public class RouterVerticle extends AbstractVerticle {
         router.get("/profile").handler(ctx -> getProfile(ctx, mongoClient));
         router.post("/photo").handler(ctx -> postProfilePhoto(ctx, mongoClient));
         router.post("/presence").handler(ctx -> postPresence(ctx, mongoClient, kafkaProducer));
+
         return vertx.createHttpServer()
                 .requestHandler(router)
                 .rxListen(HTTP_PORT)
