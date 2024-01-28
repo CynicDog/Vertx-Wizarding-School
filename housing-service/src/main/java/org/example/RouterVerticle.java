@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import static org.example.config.KafkaConfig.producerConfig;
 import static org.example.config.MongoConfig.mongoConfig;
 import static org.example.handler.HouseHandler.getHouse;
+import static org.example.handler.HouseHandler.getHouseUsers;
 
 public class RouterVerticle extends AbstractVerticle {
 
@@ -40,6 +41,7 @@ public class RouterVerticle extends AbstractVerticle {
         router.put().handler(bodyHandler);
 
         router.get("/house/:houseTitle").handler(ctx -> getHouse(ctx, mongoClient));
+        router.get("/house/:houseTitle/users").handler(ctx -> getHouseUsers(ctx, mongoClient));
 
         return vertx.createHttpServer()
                 .requestHandler(router)

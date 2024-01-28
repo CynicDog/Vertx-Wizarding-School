@@ -18,7 +18,25 @@ public class HouseHandler {
                 .rxSend()
                 .subscribe(
                         response -> {
-                            logger.info("response on the request on `GET :5000/house/:houseTitle` reads: {}", response.statusMessage());
+                            logger.info("response on the request on `GET :5000/house/" + houseTitle + "` reads: {}", response.statusMessage());
+                            ctx.response().putHeader("Content-Type", "application/json").end(response.body().encode());
+                        },
+                        err -> {
+                            logger.error(err.getMessage());
+                            ctx.fail(err);
+                        }
+                );
+    }
+
+    public static void fetchHouseUsers(RoutingContext ctx, WebClient webClient) {
+        String houseTitle = ctx.pathParam("houseTitle");
+
+        webClient.get(5000, "localhost", "/house/" + houseTitle + "/users")
+                .as(BodyCodec.jsonObject())
+                .rxSend()
+                .subscribe(
+                        response -> {
+                            logger.info("response on the request on `GET :5000/house/"+ houseTitle +"/users` reads: {}", response.statusMessage());
                             ctx.response().putHeader("Content-Type", "application/json").end(response.body().encode());
                         },
                         err -> {

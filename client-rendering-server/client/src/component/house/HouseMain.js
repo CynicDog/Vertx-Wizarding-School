@@ -2,17 +2,17 @@ import React, { Component } from "react";
 import HouseDetailCard from "./HouseDetailCard";
 import "./styles.css";
 
-export default class HouseEntry extends Component {
+export default class HouseMain extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             house: null,
+            users: null,
         };
     }
 
     componentDidMount() {
-        // Fetch the default house data when the component mounts
         this.fetchHouseData("Gryffindor");
     }
 
@@ -25,21 +25,33 @@ export default class HouseEntry extends Component {
         // Construct the URL based on the house abbreviation
         const apiUrl = `http://localhost:4000/api/v1/house/${houseTitle}`;
 
-        // Fetch data from the API
+        // Fetch house data from the API
         fetch(apiUrl)
             .then((response) => response.json())
             .then((data) => {
                 this.setState({
                     house: data,
                 });
+                // // Fetch house users data from the API
+                fetch(apiUrl + "/users")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data.students)
+                        this.setState({
+                            users: data.students,
+                        })
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching house users data:", error);
+                    })
             })
             .catch((error) => {
                 console.error("Error fetching house data:", error);
-            });
+            })
     };
 
     render() {
-        const { house } = this.state;
+        const { house, users } = this.state;
 
         return (
             <div className="container">
@@ -82,7 +94,7 @@ export default class HouseEntry extends Component {
                     </div>
                     <div className="col-lg-8 py-3">
                         <div className="">
-                            <HouseDetailCard house={house} />
+                            <HouseDetailCard house={house} users={users}/>
                         </div>
                     </div>
                 </div>

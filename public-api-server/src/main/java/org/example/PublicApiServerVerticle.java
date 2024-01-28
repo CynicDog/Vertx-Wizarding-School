@@ -17,6 +17,7 @@ import static org.example.config.RouterConfig.allowedHeaders;
 import static org.example.config.RouterConfig.allowedMethods;
 import static org.example.handler.AccountHandler.*;
 import static org.example.handler.HouseHandler.fetchHouse;
+import static org.example.handler.HouseHandler.fetchHouseUsers;
 import static org.example.handler.UserHandler.*;
 
 public class PublicApiServerVerticle extends AbstractVerticle {
@@ -72,6 +73,7 @@ public class PublicApiServerVerticle extends AbstractVerticle {
 
         { // handles request on house data
             router.get(prefix + "/house/:houseTitle").handler(ctx -> fetchHouse(ctx, webClient));
+            router.get(prefix + "/house/:houseTitle/users").handler(ctx -> fetchHouseUsers(ctx, webClient));
         }
 
 
