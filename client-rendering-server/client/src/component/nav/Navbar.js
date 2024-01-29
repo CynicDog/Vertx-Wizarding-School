@@ -1,5 +1,5 @@
 import React from 'react';
-import AvatarMe from "./user-page/AvatarMe";
+import AvatarMe from "../avatar/AvatarMe";
 import './Navbar.css'
 
 const Navbar = () => {
@@ -9,7 +9,7 @@ const Navbar = () => {
         <nav className="navbar navbar-expand bg-body-tertiary">
             <div className="container-fluid">
                 <div className="navbar-nav me-auto mx-4">
-                    <a className="nav-link active fw-lighter" aria-current="page" href="/home">🏠 Home</a>
+                    <a className="nav-link active fw-lighter" aria-current="page" href="/Users/ginsenglee/Documents/GitHub/Java/VertxWizardingSchool/client-rendering-server/client/src/page/Home">🏠 Home</a>
                     <a className="nav-link active fw-lighter" aria-current="page" href="/house">🛡️ Houses</a>
                     <a className="nav-link active fw-lighter" aria-current="page" href="/course">📚 Course</a>
                     {isLoggedIn && (

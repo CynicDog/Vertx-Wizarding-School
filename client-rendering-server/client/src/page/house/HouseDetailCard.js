@@ -1,7 +1,21 @@
-import AvatarOther from "../user-page/AvatarOther";
-import {useEffect} from "react";
+import AvatarOther from "../../component/avatar/AvatarOther";
+import {useEffect, useState} from "react";
+import eventbus from "../../module/eventbus";
 
 const HouseDetailCard = ({house, users}) => {
+
+    const [presenceMessage, setPresenceMessage] = useState(null);
+
+    useEffect(() => {
+        eventbus.onopen = () => {
+            eventbus.registerHandler("client.updates.user.presence", (err, message) => {
+                setPresenceMessage({
+                    username: message.body.username,
+                    newPresence: message.body.newPresence
+                })
+            });
+        }
+    }, [presenceMessage]);
 
     if (!house) {
         return <div>Loading...</div>;
@@ -14,7 +28,7 @@ const HouseDetailCard = ({house, users}) => {
                     <div className="d-flex justify-content-between my-2">
                         <div className="text-black fw-bold fs-3">
                             <span className="mx-3">{house.title}</span>
-                            <AvatarOther username={house.head}/>
+                            <AvatarOther username={house.head} presenceMessage={presenceMessage}/>
                         </div>
                     </div>
                     <div>
@@ -23,7 +37,7 @@ const HouseDetailCard = ({house, users}) => {
                             <hr className="mt-1 mb-2" />
                             <div>
                                 {users && users.map((user, index) => (
-                                    <AvatarOther key={index} username={user.username} />
+                                    <AvatarOther key={index} username={user.username} presenceMessage={presenceMessage} />
                                 ))}
                             </div>
                         </div>
