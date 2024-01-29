@@ -1,20 +1,19 @@
 import AvatarOther from "../../component/avatar/AvatarOther";
 import {useEffect, useState} from "react";
-import eventbus from "../../module/eventbus";
+import eventbus, {pushHandler} from "../../module/eventbus";
 
 const HouseDetailCard = ({house, users}) => {
 
     const [presenceMessage, setPresenceMessage] = useState(null);
 
     useEffect(() => {
-        eventbus.onopen = () => {
-            eventbus.registerHandler("client.updates.user.presence", (err, message) => {
-                setPresenceMessage({
-                    username: message.body.username,
-                    newPresence: message.body.newPresence
-                })
+
+        pushHandler("client.updates.user.presence", (err, message) => {
+            setPresenceMessage({
+                username: message.body.username,
+                newPresence: message.body.newPresence
             });
-        }
+        });
     }, [presenceMessage]);
 
     if (!house) {

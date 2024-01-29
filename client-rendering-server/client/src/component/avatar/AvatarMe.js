@@ -1,6 +1,6 @@
 import './Avatar.css';
 import React, { Component } from 'react';
-import eventbus from "../../module/eventbus";
+import eventbus, {pushHandler} from "../../module/eventbus";
 import Image from 'image-js';
 import { Popover } from 'bootstrap';
 import PresenceToast from "../toast/PresenceToast";
@@ -44,17 +44,15 @@ class AvatarMe extends Component {
                 console.error('Error fetching user photo', error);
             });
 
-        eventbus.onopen = () => {
-            eventbus.registerHandler("client.updates.user.register", (err, message) => {
-                const newMessage = message.body;
-                console.log(newMessage);
+        pushHandler("client.updates.user.register", (err, message) => {
+            const newMessage = message.body;
 
-                this.setState((prevState) => ({
-                    // TODO: persist messages over routing
-                    messages: [...prevState.messages, newMessage],
-                }));
-            });
-        }
+            // TODO: persist messages over routing
+            this.setState((prevState) => ({
+                messages: [...prevState.messages, newMessage],
+            }));
+        });
+
         this.initPopover();
 
         document.body.addEventListener('click', (event) => {
