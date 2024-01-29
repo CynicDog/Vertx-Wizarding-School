@@ -43,7 +43,7 @@ const AvatarOther = ({ username, presenceMessage }) => {
 
         const imagePopover = new Popover(document.getElementById('img-' + username), {
             content: popoverContent,
-            placement: 'bottom',
+            placement: 'right',
             trigger: 'hover',
             delay: {"hide": 1500},
             html: true,
