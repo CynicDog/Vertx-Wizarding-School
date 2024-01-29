@@ -26,7 +26,7 @@ export class Home extends Component {
 
         return (
             <div>
-                {greetingMessage}
+                {/*{greetingMessage}*/}
             </div>
         );
     }

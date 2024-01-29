@@ -36,7 +36,6 @@ export default class HouseMain extends Component {
                 fetch(apiUrl + "/users")
                     .then((response) => response.json())
                     .then((data) => {
-                        console.log(data.students)
                         this.setState({
                             users: data.students,
                         })
