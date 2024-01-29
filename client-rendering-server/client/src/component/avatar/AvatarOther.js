@@ -1,30 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import EventBus from 'vertx3-eventbus-client';
 import { Popover } from 'bootstrap';
 
-const AvatarOther = ({ username }) => {
+const AvatarOther = ({ username, presenceMessage }) => {
     const [userImageSrc, setUserImageSrc] = useState('');
     const [presence, setPresence] = useState('');
 
     useEffect(() => {
 
-        fetch(`http://localhost:4000/api/v1/user/profile?username=${username}`)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user photo');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setUserImageSrc(data.profilePhoto);
-                setPresence(data.presence);
-            })
-            .catch((error) => {
-                console.error('Error fetching user photo', error);
-            });
+        // check if there is a presence update message from the Kafka-eventbus topic pipeline
+        // and if the message is related to the current user (matching usernames)
+        if (presenceMessage && username === presenceMessage.username) {
+            setPresence(presenceMessage.newPresence);
+        } else {
+            fetch(`http://localhost:4000/api/v1/user/profile?username=${username}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch user photo');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    setUserImageSrc(data.profilePhoto);
+                    setPresence(data.presence);
+                })
+                .catch((error) => {
+                    console.error('Error fetching user photo', error);
+                });
+        }
 
         initPopover();
-    }, [username]);
+    }, [username, presenceMessage]);
 
     const initPopover = () => {
         const popoverContent = `
