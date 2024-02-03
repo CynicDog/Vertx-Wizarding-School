@@ -27,9 +27,6 @@ public class ClientRenderingAppVerticle extends AbstractVerticle {
     private WebClient webClient;
     private KafkaProducer<String, JsonObject> kafkaProducer;
 
-    // TODO:
-    //      0. enhance readability and maintainability by separating logics
-    //      1. add prefix on addresses of Kafka (e.g. kf.*) and Eventbus (e.g. eb.*)
     @Override
     public Completable rxStart() {
 
@@ -45,18 +42,18 @@ public class ClientRenderingAppVerticle extends AbstractVerticle {
 //                );
 
         KafkaConsumer.<String, JsonObject>create(vertx, consumerConfig("user-group"))
-                .subscribe("user.register")
+                .subscribe("KF.user.register")
                 .toFlowable()
                 .subscribe(
-                        record -> vertx.eventBus().publish("client.updates.user.register", record.value()),
+                        record -> vertx.eventBus().publish("EB.updates.user.register", record.value()),
                         err -> logger.error("Forwarding's been failed.")
                 );
 
         KafkaConsumer.<String, JsonObject>create(vertx, consumerConfig("user-group"))
-                .subscribe("user.presence.update")
+                .subscribe("KF.user.presence.update")
                 .toFlowable()
                 .subscribe(
-                        record -> vertx.eventBus().publish("client.updates.user.presence", record.value()),
+                        record -> vertx.eventBus().publish("EB.updates.user.presence", record.value()),
                         err -> logger.error("Forwarding's been failed.")
                 );
 
@@ -68,8 +65,8 @@ public class ClientRenderingAppVerticle extends AbstractVerticle {
 
         SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
         SockJSBridgeOptions bridgeOptions = new SockJSBridgeOptions()
-                .addInboundPermitted(new PermittedOptions().setAddressRegex("client.updates.*"))
-                .addOutboundPermitted(new PermittedOptions().setAddressRegex("client.updates.*"));
+                .addInboundPermitted(new PermittedOptions().setAddressRegex("EB.updates.*"))
+                .addOutboundPermitted(new PermittedOptions().setAddressRegex("EB.updates.*"));
         sockJSHandler.bridge(bridgeOptions);
         router.route("/eventbus/*").handler(sockJSHandler);
 

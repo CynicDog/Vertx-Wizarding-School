@@ -84,9 +84,9 @@ public class UserHandler {
                                     .put("content", String.format("'%s' has changed presence status", username));
 
                             kafkaProducer
-                                    .rxSend(KafkaProducerRecord.create("user.presence.update", username, bodyRecord))
+                                    .rxSend(KafkaProducerRecord.create("KF.user.presence.update", username, bodyRecord))
                                     .subscribe(
-                                            response -> logger.info("KafkaProducer.rxSend on the topic of 'user.presence.update' - " + ctx.response().getStatusMessage()),
+                                            response -> logger.info("KafkaProducer.rxSend on the topic of 'KF.user.presence.update' - " + ctx.response().getStatusMessage()),
                                             err -> logger.error("Publishing kafka record's been failed.")
                                     );
                             ctx.response().end();

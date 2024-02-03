@@ -56,9 +56,9 @@ public class RegisterHandler {
                                     .put("content", String.format("'%s' has joined our community!", username));
 
                             kafkaProducer
-                                    .rxSend(KafkaProducerRecord.create("user.register", username, bodyRecord))
+                                    .rxSend(KafkaProducerRecord.create("KF.user.register", username, bodyRecord))
                                     .subscribe(
-                                            response -> logger.info("KafkaProducer.rxSend on the topic of 'user.register' - " + ctx.response().getStatusMessage()),
+                                            response -> logger.info("KafkaProducer.rxSend on the topic of 'KF.user.register' - " + ctx.response().getStatusMessage()),
                                             err -> logger.error("Publishing kafka record's been failed.")
                                     );
                             ctx.response().end();
