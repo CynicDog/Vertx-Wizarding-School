@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Popover} from 'bootstrap';
 import HouseDetailCard from "./HouseDetailCard";
 import "./styles.css";
+import GreatHall from "../../component/chat/GreatHall";
 
 export default class HouseMain extends Component {
     constructor(props) {
@@ -58,45 +59,48 @@ export default class HouseMain extends Component {
 
         return (
             <div className="row my-2">
-                <div className="col-lg-7 py-3">
+                <div className="col-lg-8 py-3">
                     <div className="">
                         <HouseDetailCard house={house} users={users}/>
                     </div>
                 </div>
-                <div className="col-lg-5 py-3">
+                <div className="col-lg-4">
                     <div className="sticky-container">
-                        <div className="bg-body-tertiary rounded-4 shadow-sm p-3 m-3">
+                        <div className="bg-body-tertiary rounded-4 shadow-sm p-3 my-3">
                             <div className="d-flex justify-content-center">
-                                    <span
-                                        id="GRY"
-                                        type="button"
-                                        className="badge bg-danger-subtle text-danger-emphasis rounded-pill fw-light mx-1"
-                                        onClick={() => this.handleHouseBadgeClick("Gryffindor")}>
-                                        🦁 GRY
-                                    </span>
+                                <span
+                                    id="GRY"
+                                    type="button"
+                                    className="badge bg-danger-subtle text-danger-emphasis rounded-pill fw-light mx-2"
+                                    onClick={() => this.handleHouseBadgeClick("Gryffindor")}>
+                                    🦁 GRY
+                                </span>
                                 <span
                                     id="SLY"
                                     type="button"
-                                    className="badge bg-success-subtle text-success-emphasis rounded-pill fw-light mx-1"
+                                    className="badge bg-success-subtle text-success-emphasis rounded-pill fw-light mx-2"
                                     onClick={() => this.handleHouseBadgeClick("Slytherin")}>
                                         🐍 SLY
                                     </span>
                                 <span
                                     id="RAV"
                                     type="button"
-                                    className="badge bg-primary-subtle text-primary-emphasis rounded-pill fw-light mx-1"
+                                    className="badge bg-primary-subtle text-primary-emphasis rounded-pill fw-light mx-2"
                                     onClick={() => this.handleHouseBadgeClick("Ravenclaw")}>
                                         🦅 RAV
                                     </span>
                                 <span
                                     id="HUF"
                                     type="button"
-                                    className="badge bg-warning-subtle text-warning-emphasis rounded-pill fw-light mx-1"
+                                    className="badge bg-warning-subtle text-warning-emphasis rounded-pill fw-light mx-2"
                                     onClick={() => this.handleHouseBadgeClick("Hufflepuff")}>
                                         🦡 HUF
                                     </span>
                             </div>
                         </div>
+                    </div>
+                    <div>
+                        <GreatHall/>
                     </div>
                 </div>
             </div>
