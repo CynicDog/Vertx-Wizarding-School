@@ -1,6 +1,6 @@
 import AvatarOther from "../../component/avatar/AvatarOther";
 import {useEffect, useState} from "react";
-import eventbus, {pushHandler} from "../../module/eventbus";
+import eventbus, {registerHandler} from "../../module/eventbus";
 
 const HouseDetailCard = ({house, users}) => {
 
@@ -8,7 +8,7 @@ const HouseDetailCard = ({house, users}) => {
 
     useEffect(() => {
 
-        pushHandler("client.updates.user.presence", (err, message) => {
+        registerHandler("EB.updates.user.presence", (err, message) => {
             setPresenceMessage({
                 username: message.body.username,
                 newPresence: message.body.newPresence

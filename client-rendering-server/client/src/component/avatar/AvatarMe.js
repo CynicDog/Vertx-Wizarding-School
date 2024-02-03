@@ -1,6 +1,6 @@
 import './Avatar.css';
 import React, { Component } from 'react';
-import eventbus, {pushHandler} from "../../module/eventbus";
+import eventbus, {registerHandler} from "../../module/eventbus";
 import Image from 'image-js';
 import { Popover } from 'bootstrap';
 import PresenceToast from "../toast/PresenceToast";
@@ -44,7 +44,7 @@ class AvatarMe extends Component {
                 console.error('Error fetching user photo', error);
             });
 
-        pushHandler("client.updates.user.register", (err, message) => {
+        registerHandler("EB.updates.user.register", (err, message) => {
             const newMessage = message.body;
 
             // TODO: persist messages over routing

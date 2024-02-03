@@ -5,7 +5,7 @@ eventbus.enableReconnect(true);
 
 const handlers = [];
 
-export const pushHandler = (eventTopic , callback) => {
+export const registerHandler = (eventTopic , callback) => {
     handlers.push({ eventTopic, callback });
 };
 
