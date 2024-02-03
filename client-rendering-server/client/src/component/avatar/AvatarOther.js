@@ -1,35 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { Popover } from 'bootstrap';
+import React, {useState, useEffect} from 'react';
+import {Popover} from 'bootstrap';
 
-const AvatarOther = ({ username, presenceMessage }) => {
+const AvatarOther = ({username, presenceMessage}) => {
     const [userImageSrc, setUserImageSrc] = useState('');
     const [presence, setPresence] = useState('');
 
     useEffect(() => {
-
-        // check if there is a presence update message from the Kafka-eventbus topic pipeline
-        // and if the message is related to the current user (matching usernames)
-        if (presenceMessage && username === presenceMessage.username) {
-            setPresence(presenceMessage.newPresence);
-        } else {
-            fetch(`http://localhost:4000/api/v1/user/profile?username=${username}`)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user photo');
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    setUserImageSrc(data.profilePhoto);
-                    setPresence(data.presence);
-                })
-                .catch((error) => {
-                    console.error('Error fetching user photo', error);
-                });
+        // Fetch user data only if it's not available
+        if (!userImageSrc || !presence) {
+            fetchUserData();
         }
 
-        // initPopover();
-    }, [username, presenceMessage]);
+        // Update presence when there's a presence update message
+        if (presenceMessage && username === presenceMessage.username) {
+            setPresence(presenceMessage.newPresence);
+        }
+    }, [username, userImageSrc, presence, presenceMessage]);
+
+    const fetchUserData = () => {
+        fetch(`http://localhost:4000/api/v1/user/profile?username=${username}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user photo');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setUserImageSrc(data.profilePhoto);
+                setPresence(data.presence);
+            })
+            .catch((error) => {
+                console.error('Error fetching user photo', error);
+            });
+    };
 
     const initPopover = () => {
         const popoverContent = `
@@ -57,7 +60,7 @@ const AvatarOther = ({ username, presenceMessage }) => {
                 id={`img-${username}`}
                 type="button"
                 className="rounded-circle object-fit-cover position-relative mx-1"
-                style={{ width: '35px', height: '35px' }}
+                style={{width: '35px', height: '35px'}}
                 src={userImageSrc}
                 data-bs-toggle="popover"
             />
