@@ -98,21 +98,24 @@ public class AccountHandler {
                 })
                 .map(resp -> {
                     logger.info("response on the request on `GET :3000/profile?username` {} reads: {}", username, resp.statusMessage());
-                    return resp.body().getString("emailAddress");
+                    return new JsonObject()
+                            .put("house", resp.body().getString("house"));
                 })
-                .map(email -> {
+                .map(json -> {
+                    String email = json.getString("emailAddress");
                     JsonObject claims = new JsonObject().put("emailAddress", email);
                     JWTOptions jwtOptions = new JWTOptions()
                             .setAlgorithm("RS256")
                             .setExpiresInMinutes(43_200) // a month
                             .setIssuer("Vertx-Wizarding-School")
                             .setSubject(username);
-                    return jwtAuth.generateToken(claims, jwtOptions);
+                    return json.
+                            put("jwt", jwtAuth.generateToken(claims, jwtOptions));
                 })
                 .subscribe(
-                        token -> {
-                            logger.info("Token issued with the value of {}", token);
-                            ctx.response().putHeader("Content-Type", "application/jwt").end(token);
+                        json -> {
+                            logger.info("Token issued with the value of {}", json);
+                            ctx.response().putHeader("Content-Type", "application/json").end(json.encode());
                         },
                         err -> {
                             logger.error(err.getMessage());

@@ -35,7 +35,9 @@ public class RegisterHandler {
                                     .put("type", body.getString("type"))
                                     .put("createdAt", new Date().getTime())
                                     .put("profilePhoto", photo.body())
-                                    .put("presence", "available"));
+                                    .put("presence", "available")
+                                    .put("house", "")
+                            );
 
                     return mongoUserUtil
                             .rxCreateUser(username, password)

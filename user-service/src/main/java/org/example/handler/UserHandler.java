@@ -26,7 +26,7 @@ public class UserHandler {
                 .put("createdAt", 1)
                 .put("profilePhoto", 1)
                 .put("presence", 1)
-//                .put("house", 1)
+                .put("house", 1)
 //                .put("wand", 1)
 //                .put("patronus", 1)
 //                .put("pet", 1)

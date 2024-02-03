@@ -81,9 +81,10 @@ export class Login extends Component {
                 })
             }).then(response => {
                 if (response.ok) {
-                    response.text().then(jwt => {
-                        sessionStorage.setItem('jwt', jwt)
+                    response.json().then(json => {
                         sessionStorage.setItem('username', username)
+                        sessionStorage.setItem('jwt', json.jwt)
+                        sessionStorage.setItem('house', json.house)
                         this.setState((prevState) => ({
                             loginProcessing: false, validationStatus: {username: true, password: true}
                         }));
