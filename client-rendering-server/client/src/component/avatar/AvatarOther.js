@@ -28,7 +28,7 @@ const AvatarOther = ({ username, presenceMessage }) => {
                 });
         }
 
-        initPopover();
+        // initPopover();
     }, [username, presenceMessage]);
 
     const initPopover = () => {
@@ -44,8 +44,8 @@ const AvatarOther = ({ username, presenceMessage }) => {
         const imagePopover = new Popover(document.getElementById('img-' + username), {
             content: popoverContent,
             placement: 'right',
-            trigger: 'hover',
-            delay: {"hide": 1500},
+            trigger: 'click',
+            // delay: {"hide": 1500},
             html: true,
             customClass: 'user-profile-photo-popover'
         });

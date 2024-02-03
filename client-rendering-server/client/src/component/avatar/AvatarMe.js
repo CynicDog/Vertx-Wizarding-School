@@ -97,7 +97,7 @@ class AvatarMe extends Component {
 
             this.setState((prevState) => ({
                 showPresenceToast: !prevState.showPresenceToast,
-                toastPosition: { top: rect.top - 9, left: rect.left - 320 }
+                toastPosition: { top: rect.top - 9, left: rect.left - 340 }
             }));
         }
 

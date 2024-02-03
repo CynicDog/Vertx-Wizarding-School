@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
+import {Popover} from 'bootstrap';
 import HouseDetailCard from "./HouseDetailCard";
 import "./styles.css";
 
@@ -19,6 +20,9 @@ export default class HouseMain extends Component {
     handleHouseBadgeClick = (houseTitle) => {
         // Fetch data for the clicked house
         this.fetchHouseData(houseTitle);
+
+        const popovers = document.querySelectorAll('.popover');
+        console.log(popovers)
     };
 
     fetchHouseData = (houseTitle) => {
@@ -50,15 +54,19 @@ export default class HouseMain extends Component {
     };
 
     render() {
-        const { house, users } = this.state;
+        const {house, users} = this.state;
 
         return (
-            <div className="container">
-                <div className="row my-2">
-                    <div className="col-lg-4 py-3">
-                        <div className="sticky-container">
-                            <div className="bg-body-tertiary rounded-4 shadow-sm p-3 m-3">
-                                <div className="d-flex justify-content-center">
+            <div className="row my-2">
+                <div className="col-lg-7 py-3">
+                    <div className="">
+                        <HouseDetailCard house={house} users={users}/>
+                    </div>
+                </div>
+                <div className="col-lg-5 py-3">
+                    <div className="sticky-container">
+                        <div className="bg-body-tertiary rounded-4 shadow-sm p-3 m-3">
+                            <div className="d-flex justify-content-center">
                                     <span
                                         id="GRY"
                                         type="button"
@@ -66,34 +74,28 @@ export default class HouseMain extends Component {
                                         onClick={() => this.handleHouseBadgeClick("Gryffindor")}>
                                         🦁 GRY
                                     </span>
-                                    <span
-                                        id="SLY"
-                                        type="button"
-                                        className="badge bg-success-subtle text-success-emphasis rounded-pill fw-light mx-1"
-                                        onClick={() => this.handleHouseBadgeClick("Slytherin")}>
+                                <span
+                                    id="SLY"
+                                    type="button"
+                                    className="badge bg-success-subtle text-success-emphasis rounded-pill fw-light mx-1"
+                                    onClick={() => this.handleHouseBadgeClick("Slytherin")}>
                                         🐍 SLY
                                     </span>
-                                    <span
-                                        id="RAV"
-                                        type="button"
-                                        className="badge bg-primary-subtle text-primary-emphasis rounded-pill fw-light mx-1"
-                                        onClick={() => this.handleHouseBadgeClick("Ravenclaw")}>
+                                <span
+                                    id="RAV"
+                                    type="button"
+                                    className="badge bg-primary-subtle text-primary-emphasis rounded-pill fw-light mx-1"
+                                    onClick={() => this.handleHouseBadgeClick("Ravenclaw")}>
                                         🦅 RAV
                                     </span>
-                                    <span
-                                        id="HUF"
-                                        type="button"
-                                        className="badge bg-warning-subtle text-warning-emphasis rounded-pill fw-light mx-1"
-                                        onClick={() => this.handleHouseBadgeClick("Hufflepuff")}>
+                                <span
+                                    id="HUF"
+                                    type="button"
+                                    className="badge bg-warning-subtle text-warning-emphasis rounded-pill fw-light mx-1"
+                                    onClick={() => this.handleHouseBadgeClick("Hufflepuff")}>
                                         🦡 HUF
                                     </span>
-                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-8 py-3">
-                        <div className="">
-                            <HouseDetailCard house={house} users={users}/>
                         </div>
                     </div>
                 </div>

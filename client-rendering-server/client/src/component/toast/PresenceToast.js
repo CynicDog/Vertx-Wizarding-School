@@ -22,7 +22,7 @@ const PresenceToast = ({ presence, onUpdatePresence, messages }) => {
             return 'text-danger-emphasis bg-danger-subtle'
         } else if (presence === statusType && statusType === 'available') {
             return 'text-primary-emphasis bg-primary-subtle'
-        } else if (presence === statusType && statusType === 'away') {
+        } else if (presence === statusType && statusType === 'studying') {
             return 'text-success-emphasis bg-success-subtle'
         } else if (presence === statusType && statusType === 'on-call') {
             return 'text-warning-emphasis bg-warning-subtle'
@@ -34,7 +34,7 @@ const PresenceToast = ({ presence, onUpdatePresence, messages }) => {
     };
 
     return (
-        <div className="toast bg-body-tertiary align-items-center border-1" style={{ width: '300px' }} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
+        <div className="toast bg-body-tertiary align-items-center border-1" style={{ width: '320px' }} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
             <div className="">
                 <div className="toast-body">
                     <div className="my-1 pb-2">
@@ -47,9 +47,9 @@ const PresenceToast = ({ presence, onUpdatePresence, messages }) => {
                             Available
                         </span>
                         <span
-                            className={`btn badge rounded-pill border-success ${getStatusStyle('away')} mx-1`}
-                            onClick={() => onUpdatePresence('away')}>
-                            Away
+                            className={`btn badge rounded-pill border-success ${getStatusStyle('studying')} mx-1`}
+                            onClick={() => onUpdatePresence('studying')}>
+                            Studying
                         </span>
                         <span
                             className={`btn badge rounded-pill border-warning ${getStatusStyle('on-call')}`}

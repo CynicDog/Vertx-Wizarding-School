@@ -21,7 +21,7 @@
 .user-presence.available {
     background-color: #64b5f6; /* Light Blue */
 }
-.user-presence.away {
+.user-presence.studying {
     background-color: #81c784; /* Light Green */
 }
 .user-presence.on-call {
