@@ -65,10 +65,16 @@ public class ClientRenderingAppVerticle extends AbstractVerticle {
 
         SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
         SockJSBridgeOptions bridgeOptions = new SockJSBridgeOptions()
-                .addInboundPermitted(new PermittedOptions().setAddressRegex("EB.updates.*"))
-                .addOutboundPermitted(new PermittedOptions().setAddressRegex("EB.updates.*"));
+                .addInboundPermitted(new PermittedOptions().setAddressRegex("EB.*"))
+                .addOutboundPermitted(new PermittedOptions().setAddressRegex("EB.*"));
         sockJSHandler.bridge(bridgeOptions);
+
         router.route("/eventbus/*").handler(sockJSHandler);
+
+        vertx.eventBus().consumer("EB.chat.great-hall.send", message -> {
+            vertx.eventBus().publish("EB.chat.great-hall.propagate", message.body());
+        });
+
 
         // demo
         router.get("/greeting").handler(ctx -> {
