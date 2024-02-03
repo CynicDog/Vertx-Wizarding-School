@@ -7,6 +7,7 @@ const GreatHall = () => {
     const [newMessage, setNewMessage] = useState("");
     const [loggedInUser] = useState(sessionStorage.getItem("username"));
     const messagesEndRef = useRef(null);
+    let senderHouse = sessionStorage.getItem('house');
     let prevSender = null;
 
     useEffect(() => {
@@ -32,7 +33,7 @@ const GreatHall = () => {
     const handleSendMessage = () => {
         if (newMessage.trim() !== "") {
             // Send a message to the server using EventBus
-            EventBus.send("EB.chat.great-hall.send", { text: newMessage, sender: loggedInUser });
+            EventBus.send("EB.chat.great-hall.send", { text: newMessage, sender: loggedInUser, senderHouse: senderHouse });
 
             // Clear the input field
             setNewMessage("");
@@ -43,26 +44,39 @@ const GreatHall = () => {
         messagesEndRef.current.scrollIntoView({behavior: "smooth"});
     };
 
+    const getMessageStyle = (house) => {
+
+        if (house === 'Gryffindor') {
+            return 'bg-danger-subtle text-danger-emphasis'
+        } else if (house === 'Slytherin') {
+            return 'bg-success-subtle text-success-emphasis'
+        } else if (house === 'Ravenclaw') {
+            return 'bg-primary-subtle text-primary-emphasis'
+        } else if (house === 'Hufflepuff') {
+            return 'bg-warning-subtle text-warning-emphasis'
+        } else {
+            return 'bg-dark-subtle text-dark-emphasis'
+        }
+    };
+
     return (
         <div className="border rounded-4 shadow-sm p-2">
-            <div className="p-2" style={{ overflowY: "auto", height: "400px" }}>
+            <div className="p-2" style={{ overflowX: "hidden", overflowY: "auto", height: "400px" }}>
                 {messages.map((message, index) => {
                     const isNewSpeakerSaying = message.sender !== prevSender;
                     prevSender = message.sender;
 
                     return (
                         <div key={index} className={`d-flex align-items-center my-2 ${message.sender === loggedInUser ? "flex-row-reverse ms-auto" : "flex-row"}`}>
-                            {isNewSpeakerSaying && <AvatarOther username={message.sender} />}
+                            {isNewSpeakerSaying ? <AvatarOther username={message.sender} /> : <div style={{paddingRight: "42px"}}></div>}
                             <div
-                                className={`text-start fw-light badge bg-danger-subtle text-danger-emphasis rounded-pill ${message.sender === loggedInUser ? "" : ""}`}
+                                className={`text-start fw-light badge ${getMessageStyle(message.senderHouse)} rounded-pill`}
                                 style={{
                                     wordWrap: "break-word",
                                     maxWidth: "80%",
-                                    width: `${message.text.length * 5 + 50}px`,
                                     padding: "5px",
                                 }}
                             >
-                                {message.sender === loggedInUser ? "you: " : ``}
                                 {message.text}
                             </div>
                         </div>
@@ -76,6 +90,7 @@ const GreatHall = () => {
                     type="text"
                     className="form-control flex-grow-1"
                     value={newMessage}
+                    maxLength="70"
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                 />

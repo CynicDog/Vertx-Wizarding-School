@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Toast } from 'bootstrap';
 
-// TODO: rename presence to event (such as PresenceToast to EventToast ...)
 const PresenceToast = ({ presence, onUpdatePresence, messages }) => {
     const toastRef = useRef(null);
 
