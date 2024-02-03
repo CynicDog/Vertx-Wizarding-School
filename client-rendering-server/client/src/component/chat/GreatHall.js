@@ -68,7 +68,7 @@ const GreatHall = () => {
 
                     return (
                         <div key={index} className={`d-flex align-items-center my-2 ${message.sender === loggedInUser ? "flex-row-reverse ms-auto" : "flex-row"}`}>
-                            {isNewSpeakerSaying ? <AvatarOther username={message.sender} /> : <div style={{paddingRight: "42px"}}></div>}
+                            {isNewSpeakerSaying ? <AvatarOther username={message.sender} showPresence={false}/> : <div style={{paddingRight: "42px"}}></div>}
                             <div
                                 className={`text-start fw-light badge ${getMessageStyle(message.senderHouse)} rounded-pill`}
                                 style={{
@@ -90,7 +90,7 @@ const GreatHall = () => {
                     type="text"
                     className="form-control flex-grow-1"
                     value={newMessage}
-                    maxLength="70"
+                    maxLength="30"
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                 />
