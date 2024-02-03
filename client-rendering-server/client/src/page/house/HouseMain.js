@@ -98,9 +98,9 @@ export default class HouseMain extends Component {
                                     </span>
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <GreatHall/>
+                        <div>
+                            <GreatHall/>
+                        </div>
                     </div>
                 </div>
             </div>
