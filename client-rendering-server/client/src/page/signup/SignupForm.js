@@ -297,7 +297,7 @@ export class SignupForm extends Component {
                             </div>
                         </div>
                         <div className="text-center">
-                            <button id="signupButton" className="btn btn-light btn-sm"
+                            <button id="signupButton" className="btn btn-sm"
                                     disabled={!Object.values(validationStatus).every((status) => status === true)}
                                     onClick={this.handleSignupClick}>
                                 signup

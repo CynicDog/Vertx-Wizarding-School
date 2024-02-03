@@ -9,7 +9,7 @@ export class SingupEntry extends Component {
                     <div className="col my-4">
                         <div className="fw-lighter fs-2 my-3 "> Welcome to Vertx Wizarding World!</div>
                         <div className="fw-light fs-5 py-3 mb-5">
-                            <span className="bg-light p-2">
+                            <span className="p-2">
                                 Thank you for choosing to join our community. We're excited to have you onboard!
                             </span>
                         </div>
@@ -17,10 +17,10 @@ export class SingupEntry extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div id="studentSignupButton" className="col fw-light my-3"><a className="btn btn-light" href="/signup/student">✏️ Student</a></div>
+                    <div className="col fw-light my-3"><a className="btn border" href="/signup/student">✏️ Student</a></div>
                 </div>
                 <div className="row">
-                    <div id="teacherSignupButton" className="col fw-light my-3"><a className="btn btn-light" href="/signup/teacher">🖋️ Teacher</a></div>
+                    <div className="col fw-light my-3"><a className="btn border" href="/signup/teacher">🖋️ Teacher</a></div>
                 </div>
             </div>
         );

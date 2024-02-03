@@ -160,7 +160,7 @@ export class Login extends Component {
                             </div>
                             <div className="mt-4 d-flex align-items-center">
                                 <button
-                                    className="btn btn-light btn-sm ms-auto"
+                                    className="btn btn-sm ms-auto"
                                     disabled={!Object.values(validationStatus).every((status) => status === true) || loginProcessing}
                                     onClick={this.handleLoginClick}>
                                     <span>Login</span>
