@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Popover} from 'bootstrap';
 
-const AvatarOther = ({username, presenceMessage}) => {
+const AvatarOther = ({username, presenceMessage, showPresence = true}) => {
     const [userImageSrc, setUserImageSrc] = useState('');
     const [presence, setPresence] = useState('');
 
@@ -64,7 +64,7 @@ const AvatarOther = ({username, presenceMessage}) => {
                 src={userImageSrc}
                 data-bs-toggle="popover"
             />
-            <div type="button" className={`user-presence ${presence}`}></div>
+            {showPresence && <div type="button" className={`user-presence ${presence}`}></div>}
         </div>
     );
 };
