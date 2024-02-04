@@ -11,13 +11,18 @@ const GreatHall = () => {
     let prevSender = null;
 
     useEffect(() => {
-        registerHandler("EB.chat.great-hall.propagate", (err, message) => {
+        const messageHandler = (err, message) => {
             const newMessage = message.body;
             setMessages((prevMessages) => [...prevMessages, newMessage]);
-        });
+        };
 
-        scrollToBottom();
-    }, [messages]); // Trigger effect when messages change
+        registerHandler("EB.chat.great-hall.propagate", messageHandler);
+
+        return () => {
+            EventBus.unregisterHandler("EB.chat.great-hall.propagate", messageHandler);
+            console.log("unregistered handler on `EB.chat.great-hall.propagate`")
+        };
+    }, []);
 
     const handleInputChange = (e) => {
         setNewMessage(e.target.value);

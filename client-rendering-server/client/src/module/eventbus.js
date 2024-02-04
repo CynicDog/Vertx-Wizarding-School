@@ -11,6 +11,7 @@ export const registerHandler = (eventTopic , callback) => {
 
 const registerHandlers = () => {
     handlers.forEach(({ eventTopic, callback }) => {
+        console.log(`handler for '${eventTopic}' got registered `)
         eventbus.registerHandler(eventTopic, callback);
     });
 };

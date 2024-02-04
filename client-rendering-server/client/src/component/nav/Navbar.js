@@ -36,6 +36,7 @@ const Navbar = () => {
         applyColorModePreference();
     }, []);
 
+    /* TODO: refactor to userNavigate hook from href. Event handler registrations along with navigation should be working fine. */
     return (
         <nav className="navbar navbar-expand bg-body-tertiary">
             <div className="container-fluid">
